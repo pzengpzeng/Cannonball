@@ -1,11 +1,15 @@
 import Cannon from "./cannon";
+import Monkey from "./monkey";
 
 class Game {
   constructor(ctx) {
     this.ctx = ctx;
     this.cannons = [];
+    this.monkey = null;
     this.animate();
     window.removeCannon = this.removeCannon.bind(this, this.ctx);
+
+    this.detectSpacePress();
   }
 
   animate() {
@@ -23,6 +27,45 @@ class Game {
     this.cannons.forEach(cannon => {
       cannon.move();
     });
+
+    if (this.monkey) {
+      this.monkey.move();
+    }
+
+    this.detectCollisions();
+  }
+
+  detectSpacePress() {
+    window.addEventListener("keydown", event => {
+      if (event.keyCode === 32) {
+        this.addMonkey();
+      }
+    });
+  }
+
+  detectCollisions() {
+    let nextCannonX, nextCannonY, monkeyX, monkeyY;
+
+    if (this.cannons[1]) {
+      nextCannonX = this.cannons[1].position[0];
+      nextCannonY = this.cannons[1].position[1];
+    }
+
+    if (this.monkey) {
+      monkeyX = this.monkey.position[0];
+      monkeyY = this.monkey.position[1];
+    }
+    const XBoundaries = [0, 1000];
+    const yBoundaries = [0, 600];
+
+    if (
+      monkeyX + 40 >= nextCannonX &&
+      monkeyX + 40 <= nextCannonX + 45 &&
+      monkeyY + 40 >= nextCannonY &&
+      monkeyY + 40 <= nextCannonY + 45
+    ) {
+      this.removeMonkey();
+    }
   }
 
   addCannon() {
@@ -52,9 +95,21 @@ class Game {
     this.drawCannons(ctx);
   }
 
+  addMonkey() {
+    let xPos = this.cannons[0].position[0] + 45;
+    let yPos = this.cannons[0].position[1];
+
+    this.monkey = new Monkey(xPos, yPos);
+  }
+
+  removeMonkey() {
+    this.monkey = null;
+  }
+
   draw(ctx) {
     this.drawBackground(ctx);
     this.drawCannons(ctx);
+    this.drawMonkey(ctx);
   }
 
   drawBackground(ctx) {
@@ -68,6 +123,12 @@ class Game {
       // cannon.degrees += 0.3;
       // cannon.drawRotated(ctx, cannon.degrees);
     });
+  }
+
+  drawMonkey(ctx) {
+    if (this.monkey) {
+      this.monkey.drawStationary(ctx);
+    }
   }
 }
 
