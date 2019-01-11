@@ -4,12 +4,15 @@ import Monkey from "./monkey";
 class Game {
   constructor(ctx) {
     this.ctx = ctx;
+    this.score = 0;
+    this.gameOver = false;
     this.cannons = [];
     this.monkey = null;
-    this.animate();
-    window.removeCannon = this.removeCannon.bind(this, this.ctx);
+    this.successfulLaunch = false;
+    this.distanceMoved = 0;
 
-    this.detectSpacePress();
+    this.animate();
+    this.detectKeyPress();
   }
 
   animate() {
@@ -18,14 +21,25 @@ class Game {
     }
 
     this.draw(this.ctx);
-    this.step();
+
+    if (this.successfulLaunch) {
+      if (this.distanceMoved <= 300) {
+        this.moveAllCannons();
+        this.distanceMoved += 5;
+      } else {
+        this.successfulLaunch = false;
+        this.distanceMoved = 0;
+      }
+    } else {
+      this.step(this.ctx);
+    }
 
     requestAnimationFrame(this.animate.bind(this));
   }
 
   step() {
     this.cannons.forEach(cannon => {
-      cannon.move();
+      cannon.moveY();
     });
 
     if (this.monkey) {
@@ -35,10 +49,12 @@ class Game {
     this.detectCollisions();
   }
 
-  detectSpacePress() {
+  detectKeyPress() {
     window.addEventListener("keydown", event => {
       if (event.keyCode === 32) {
         this.addMonkey();
+      } else if (event.keyCode === 13) {
+        location.reload();
       }
     });
   }
@@ -55,17 +71,33 @@ class Game {
       monkeyX = this.monkey.position[0];
       monkeyY = this.monkey.position[1];
     }
-    const XBoundaries = [0, 1000];
+    const xBoundaries = [0, 1000];
     const yBoundaries = [0, 600];
 
     if (
-      monkeyX + 40 >= nextCannonX &&
-      monkeyX + 40 <= nextCannonX + 45 &&
-      monkeyY + 40 >= nextCannonY &&
-      monkeyY + 40 <= nextCannonY + 45
+      monkeyX + 30 >= nextCannonX + 45 &&
+      monkeyX + 30 <= nextCannonX + 90 &&
+      monkeyY + 30 >= nextCannonY + 45 &&
+      monkeyY + 30 <= nextCannonY + 90
     ) {
       this.removeMonkey();
+      this.removeCannon();
+      this.score += 1;
+      this.successfulLaunch = true;
+    } else if (
+      monkeyX <= xBoundaries[0] ||
+      monkeyX >= xBoundaries[1] ||
+      monkeyY <= yBoundaries[0] ||
+      monkeyY >= yBoundaries[1]
+    ) {
+      this.gameOver = true;
     }
+  }
+
+  moveAllCannons() {
+    this.cannons.forEach(cannon => {
+      cannon.moveX(5);
+    });
   }
 
   addCannon() {
@@ -77,7 +109,7 @@ class Game {
 
     if (this.cannons.length <= 0) {
       xPos = 150;
-      verticalD = 1;
+      verticalD = 2;
       horizontalD = RIGHT;
     } else {
       xPos = this.cannons[this.cannons.length - 1].position[0] + 300;
@@ -88,11 +120,10 @@ class Game {
     this.cannons.push(new Cannon(xPos, verticalD, horizontalD));
   }
 
-  removeCannon(ctx) {
+  removeCannon() {
     const RIGHT = "RIGHT";
     this.cannons.splice(0, 1);
     this.cannons[0].horizontalD = RIGHT;
-    this.drawCannons(ctx);
   }
 
   addMonkey() {
@@ -107,14 +138,30 @@ class Game {
   }
 
   draw(ctx) {
-    this.drawBackground(ctx);
-    this.drawCannons(ctx);
-    this.drawMonkey(ctx);
+    if (this.gameOver) {
+      this.renderGameOver(ctx);
+    } else {
+      this.drawBackground(ctx);
+      this.drawCannons(ctx);
+      this.drawMonkey(ctx);
+    }
+  }
+
+  renderGameOver(ctx) {
+    ctx.textAlign = "center";
+    ctx.font = "40px 'Teko'";
+    ctx.fillStyle = "white";
+    ctx.fillText(`THANKS FOR PLAYING!`, 500, 300);
+    ctx.fillStyle = "yellow";
+    ctx.fillText(`Press enter to restart!`, 500, 350);
   }
 
   drawBackground(ctx) {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, 1000, 600);
+    ctx.font = "30px 'Teko'";
+    ctx.fillStyle = "white";
+    ctx.fillText(`Score: ${this.score}`, 860, 30);
   }
 
   drawCannons(ctx) {
@@ -127,7 +174,9 @@ class Game {
 
   drawMonkey(ctx) {
     if (this.monkey) {
-      this.monkey.drawStationary(ctx);
+      // this.monkey.drawStationary(ctx);
+      this.monkey.degrees += 5;
+      this.monkey.drawRotated(ctx, this.monkey.degrees);
     }
   }
 }
