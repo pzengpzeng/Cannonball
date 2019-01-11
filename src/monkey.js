@@ -8,22 +8,23 @@ class Monkey {
     this.position = [xPos, yPos];
     this.flyRightImage = monkeyFlyRightImage;
     this.ballImage = monkeyBallImage;
+    this.degrees = 0;
   }
 
   drawStationary(ctx) {
-    ctx.drawImage(this.flyRightImage, this.position[0], this.position[1], 80, 80);
+    ctx.drawImage(this.flyRightImage, this.position[0], this.position[1], 60, 60);
   }
 
   drawRotated(ctx, degrees) {
     ctx.save();
     ctx.translate(this.position[0], this.position[1]);
     ctx.rotate((degrees * Math.PI) / 180);
-    ctx.drawImage(this.ballImage, -image.width / 2, -image.width / 2, 80, 80);
+    ctx.drawImage(this.ballImage, -60 / 2, -60 / 2, 60, 60);
     ctx.restore();
   }
 
   move() {
-    this.position[0] += 5;
+    this.position[0] += 8;
   }
 }
 
