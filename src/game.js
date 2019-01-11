@@ -77,10 +77,10 @@ class Game {
     const yBoundaries = [0, 600];
 
     if (
-      monkeyX + 30 >= nextCannonX + 45 &&
-      monkeyX + 30 <= nextCannonX + 90 &&
-      monkeyY + 30 >= nextCannonY + 45 &&
-      monkeyY + 30 <= nextCannonY + 90
+      monkeyX + 30 >= nextCannonX + 30 &&
+      monkeyX + 30 <= nextCannonX + 100 &&
+      monkeyY + 30 >= nextCannonY + 30 &&
+      monkeyY + 30 <= nextCannonY + 100
     ) {
       this.removeMonkey();
       this.removeCannon();
