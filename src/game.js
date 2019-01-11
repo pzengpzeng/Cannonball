@@ -5,6 +5,7 @@ class Game {
     this.ctx = ctx;
     this.cannons = [];
     this.animate();
+    window.removeCannon = this.removeCannon.bind(this, this.ctx);
   }
 
   animate() {
@@ -42,6 +43,13 @@ class Game {
     }
 
     this.cannons.push(new Cannon(xPos, verticalD, horizontalD));
+  }
+
+  removeCannon(ctx) {
+    const RIGHT = "RIGHT";
+    this.cannons.splice(0, 1);
+    this.cannons[0].horizontalD = RIGHT;
+    this.drawCannons(ctx);
   }
 
   draw(ctx) {

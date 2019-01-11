@@ -23,7 +23,7 @@ class Cannon {
 
   drawStationary(ctx) {
     let image = this.selectImage();
-    ctx.drawImage(image, this.position[0], this.position[1], 60, 60);
+    ctx.drawImage(image, this.position[0], this.position[1], 90, 90);
   }
 
   drawRotated(ctx, degrees) {
@@ -32,13 +32,13 @@ class Cannon {
     ctx.save();
     ctx.translate(this.position[0], this.position[1]);
     ctx.rotate((degrees * Math.PI) / 180);
-    ctx.drawImage(image, -image.width / 2, -image.width / 2, 60, 60);
+    ctx.drawImage(image, -image.width / 2, -image.width / 2, 90, 90);
     ctx.restore();
   }
 
   move() {
     this.position[1] += this.verticalD;
-    if (this.position[1] <= 0 || this.position[1] + 60 >= 600) {
+    if (this.position[1] <= 0 || this.position[1] + 90 >= 600) {
       this.verticalD = -this.verticalD;
     }
   }
