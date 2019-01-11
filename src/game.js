@@ -51,8 +51,10 @@ class Game {
 
   detectKeyPress() {
     window.addEventListener("keydown", event => {
+      const RIGHTEMPTY = "RIGHTEMPTY";
       if (event.keyCode === 32) {
         this.addMonkey();
+        this.cannons[0].horizontalD = RIGHTEMPTY;
       } else if (event.keyCode === 13) {
         location.reload();
       }
@@ -105,12 +107,12 @@ class Game {
     let verticalD;
     let horizontalD;
     const LEFT = "LEFT";
-    const RIGHT = "RIGHT";
+    const RIGHTFULL = "RIGHTFULL";
 
     if (this.cannons.length <= 0) {
       xPos = 150;
       verticalD = 2;
-      horizontalD = RIGHT;
+      horizontalD = RIGHTFULL;
     } else {
       xPos = this.cannons[this.cannons.length - 1].position[0] + 300;
       verticalD = -this.cannons[this.cannons.length - 1].verticalD;
@@ -121,9 +123,9 @@ class Game {
   }
 
   removeCannon() {
-    const RIGHT = "RIGHT";
+    const RIGHTFULL = "RIGHTFULL";
     this.cannons.splice(0, 1);
-    this.cannons[0].horizontalD = RIGHT;
+    this.cannons[0].horizontalD = RIGHTFULL;
   }
 
   addMonkey() {

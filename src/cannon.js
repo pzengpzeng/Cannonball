@@ -6,6 +6,8 @@ const cannonFullLeftImage = new Image();
 cannonFullLeftImage.src = "../assets/images/cannon-full-left.png";
 const cannonFullRightImage = new Image();
 cannonFullRightImage.src = "../assets/images/cannon-full-right.png";
+const monkeyLoadedRightImage = new Image();
+monkeyLoadedRightImage.src = "../assets/images/monkey-loaded-right.png";
 
 class Cannon {
   constructor(xPos, verticalD, horizontalD) {
@@ -16,8 +18,10 @@ class Cannon {
     this.emptyRightImage = cannonEmptyRightImage;
     this.fullLeftImage = cannonFullLeftImage;
     this.fullRightImage = cannonFullRightImage;
+    this.monkeyLoadedRightImage = monkeyLoadedRightImage;
     this.verticalD = verticalD;
     this.horizontalD = horizontalD;
+    this.image = null;
     this.degrees = 0;
   }
 
@@ -48,14 +52,15 @@ class Cannon {
   }
 
   selectImage() {
-    let image;
     if (this.horizontalD === "LEFT") {
-      image = this.emptyLeftImage;
-    } else {
-      image = this.emptyRightImage;
+      this.image = this.emptyLeftImage;
+    } else if (this.horizontalD === "RIGHTFULL") {
+      this.image = this.monkeyLoadedRightImage;
+    } else if (this.horizontalD === "RIGHTEMPTY") {
+      this.image = this.emptyRightImage;
     }
 
-    return image;
+    return this.image;
   }
 }
 
