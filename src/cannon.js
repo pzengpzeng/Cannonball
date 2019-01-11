@@ -9,7 +9,7 @@ cannonFullRightImage.src = "../assets/images/cannon-full-right.png";
 
 class Cannon {
   constructor(xPos, verticalD, horizontalD) {
-    let yPos = Math.random() * 500 + 50;
+    let yPos = Math.random() * 450 + 50;
 
     this.position = [xPos, yPos];
     this.emptyLeftImage = cannonEmptyLeftImage;
@@ -32,15 +32,19 @@ class Cannon {
     ctx.save();
     ctx.translate(this.position[0], this.position[1]);
     ctx.rotate((degrees * Math.PI) / 180);
-    ctx.drawImage(image, -image.width / 2, -image.width / 2, 90, 90);
+    ctx.drawImage(image, -image.width / 2, -image.height / 2, 90, 90);
     ctx.restore();
   }
 
-  move() {
+  moveY() {
     this.position[1] += this.verticalD;
     if (this.position[1] <= 0 || this.position[1] + 90 >= 600) {
       this.verticalD = -this.verticalD;
     }
+  }
+
+  moveX(speed) {
+    this.position[0] -= speed;
   }
 
   selectImage() {
