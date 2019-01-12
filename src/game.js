@@ -1,15 +1,27 @@
 import Cannon from "./cannon";
 import Monkey from "./monkey";
 
+const backgroundImage = new Image();
+backgroundImage.src = "../assets/images/background.jpeg";
+const bgTheme = new Audio("../assets/sounds/bg_theme.mp3");
+const barrelBlast = new Audio("../assets/sounds/barrel_blast.mp3");
+const barrelLoad = new Audio("../assets/sounds/barrel_load.mp3");
+
 class Game {
   constructor(ctx) {
     this.ctx = ctx;
+    this.backgroundImage = backgroundImage;
     this.score = 0;
     this.gameOver = false;
     this.cannons = [];
     this.monkey = null;
     this.successfulLaunch = false;
     this.distanceMoved = 0;
+    this.highestScore = parseInt(localStorage.getItem("highScore"));
+
+    this.bgTheme = bgTheme;
+    this.barrelBlast = barrelBlast;
+    this.barrelLoad = barrelLoad;
 
     this.animate();
     this.detectKeyPress();
@@ -23,7 +35,7 @@ class Game {
     this.draw(this.ctx);
 
     if (this.successfulLaunch) {
-      if (this.distanceMoved <= 300) {
+      if (this.distanceMoved <= 295) {
         this.moveAllCannons();
         this.distanceMoved += 5;
       } else {
@@ -53,10 +65,16 @@ class Game {
     window.addEventListener("keydown", event => {
       const RIGHTEMPTY = "RIGHTEMPTY";
       if (event.keyCode === 32) {
-        this.addMonkey();
-        this.cannons[0].horizontalD = RIGHTEMPTY;
-      } else if (event.keyCode === 13) {
-        location.reload();
+        if (this.gameOver) {
+          location.reload();
+        } else {
+          this.addMonkey();
+          this.barrelBlast.play();
+          this.bgTheme.play();
+          this.bgTheme.loop = true;
+          this.successfulLaunch = true;
+          this.cannons[0].horizontalD = RIGHTEMPTY;
+        }
       }
     });
   }
@@ -73,6 +91,7 @@ class Game {
       monkeyX = this.monkey.position[0];
       monkeyY = this.monkey.position[1];
     }
+
     const xBoundaries = [0, 1000];
     const yBoundaries = [0, 600];
 
@@ -85,7 +104,7 @@ class Game {
       this.removeMonkey();
       this.removeCannon();
       this.score += 1;
-      this.successfulLaunch = true;
+      this.barrelLoad.play();
     } else if (
       monkeyX <= xBoundaries[0] ||
       monkeyX >= xBoundaries[1] ||
@@ -93,6 +112,9 @@ class Game {
       monkeyY >= yBoundaries[1]
     ) {
       this.gameOver = true;
+      if (this.score > this.highestScore) {
+        this.highestScore = localStorage.setItem("highScore", this.score);
+      }
     }
   }
 
@@ -151,18 +173,39 @@ class Game {
 
   renderGameOver(ctx) {
     ctx.textAlign = "center";
-    ctx.font = "40px 'Teko'";
+    ctx.font = "80px 'Teko'";
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 4;
+    ctx.strokeText(`GAME OVER`, 500, 200);
     ctx.fillStyle = "white";
-    ctx.fillText(`THANKS FOR PLAYING!`, 500, 300);
-    ctx.fillStyle = "yellow";
-    ctx.fillText(`Press enter to restart!`, 500, 350);
+    ctx.fillText(`GAME OVER`, 500, 200);
+
+    ctx.font = "40px 'Teko'";
+    ctx.strokeStyle = "#ffbf00";
+    ctx.lineWidth = 4;
+    ctx.strokeText(`Your best score: ${this.highestScore}`, 500, 300);
+    ctx.strokeText(`Recent score: ${this.score}`, 500, 350);
+
+    ctx.fillStyle = "black";
+    ctx.fillText(`Your highest score: ${this.highestScore}`, 500, 300);
+    ctx.fillText(`Recent score: ${this.score}`, 500, 350);
+
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 4;
+    ctx.strokeText(`PRESS SPACE TO PLAY AGAIN!`, 500, 450);
+    ctx.fillStyle = "white";
+    ctx.fillText(`PRESS SPACE TO PLAY AGAIN!`, 500, 450);
   }
 
   drawBackground(ctx) {
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, 1000, 600);
+    ctx.drawImage(this.backgroundImage, 0, 0, 1000, 600);
+    // ctx.fillStyle = "black";
+    // ctx.fillRect(0, 0, 1000, 600);
     ctx.font = "30px 'Teko'";
-    ctx.fillStyle = "white";
+    ctx.strokeStyle = "#ffbf00";
+    ctx.lineWidth = 4;
+    ctx.strokeText(`Score: ${this.score}`, 860, 30);
+    ctx.fillStyle = "black";
     ctx.fillText(`Score: ${this.score}`, 860, 30);
   }
 
@@ -176,7 +219,6 @@ class Game {
 
   drawMonkey(ctx) {
     if (this.monkey) {
-      // this.monkey.drawStationary(ctx);
       this.monkey.degrees += 5;
       this.monkey.drawRotated(ctx, this.monkey.degrees);
     }
