@@ -145,10 +145,10 @@ class Game {
       this.score += 3;
       this.barrelLoad.play();
     } else if (
-      monkeyX <= xBoundaries[0] ||
-      monkeyX >= xBoundaries[1] ||
-      monkeyY <= yBoundaries[0] ||
-      monkeyY >= yBoundaries[1]
+      monkeyX + 30 <= xBoundaries[0] ||
+      monkeyX + 30 >= xBoundaries[1] ||
+      monkeyY + 30 <= yBoundaries[0] ||
+      monkeyY + 30 >= yBoundaries[1]
     ) {
       this.gameOver = true;
       if (this.score > this.highestScore) {
@@ -240,12 +240,12 @@ class Game {
     ctx.strokeStyle = "white";
     ctx.lineWidth = 4;
     ctx.fillStyle = "black";
-    ctx.strokeText(`Your best score: ${this.highestScore}`, 500, 300);
-    ctx.strokeText(`Recent score: ${this.score}`, 500, 350);
+    ctx.strokeText(`Your best score : ${this.highestScore}`, 500, 300);
+    ctx.strokeText(`Recent score : ${this.score}`, 500, 350);
 
     ctx.fillStyle = "black";
-    ctx.fillText(`Your best score: ${this.highestScore}`, 500, 300);
-    ctx.fillText(`Recent score: ${this.score}`, 500, 350);
+    ctx.fillText(`Your best score : ${this.highestScore}`, 500, 300);
+    ctx.fillText(`Recent score : ${this.score}`, 500, 350);
 
     ctx.strokeStyle = "black";
     ctx.lineWidth = 4;
@@ -260,9 +260,9 @@ class Game {
     ctx.font = "30px 'Teko'";
     ctx.strokeStyle = "white";
     ctx.lineWidth = 4;
-    ctx.strokeText(`Score: ${this.score}`, 990, 30);
+    ctx.strokeText(`Score : ${this.score}`, 990, 30);
     ctx.fillStyle = "black";
-    ctx.fillText(`Score: ${this.score}`, 990, 30);
+    ctx.fillText(`Score : ${this.score}`, 990, 30);
   }
 
   drawCannons(ctx) {

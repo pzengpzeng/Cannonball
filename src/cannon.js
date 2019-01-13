@@ -2,8 +2,6 @@ const cannonEmptyLeftImage = new Image();
 cannonEmptyLeftImage.src = "../assets/images/cannon-empty-left.png";
 const cannonEmptyRightImage = new Image();
 cannonEmptyRightImage.src = "../assets/images/cannon-empty-right.png";
-const cannonFullLeftImage = new Image();
-cannonFullLeftImage.src = "../assets/images/cannon-full-left.png";
 const cannonFullRightImage = new Image();
 cannonFullRightImage.src = "../assets/images/monkey-loaded-right.png";
 
@@ -14,7 +12,6 @@ class Cannon {
     this.position = [xPos, yPos];
     this.emptyLeftImage = cannonEmptyLeftImage;
     this.emptyRightImage = cannonEmptyRightImage;
-    this.fullLeftImage = cannonFullLeftImage;
     this.fullRightImage = cannonFullRightImage;
     this.verticalD = verticalD;
     this.horizontalD = horizontalD;
