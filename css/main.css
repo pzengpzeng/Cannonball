@@ -12,3 +12,10 @@ body {
 #canvas {
   border: 5px solid black;
 }
+
+#audio {
+  position: relative;
+  top: 570px;
+  right: 40px;
+  height: 30px;
+}
