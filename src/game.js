@@ -10,7 +10,7 @@ cannonEmptyRightImg.src = "../assets/images/cannon-empty-right.png";
 const cannonEmptyLeftImg = new Image();
 cannonEmptyLeftImg.src = "../assets/images/cannon-empty-left.png";
 
-const bgTheme = new Audio("../assets/sounds/bg_theme.mp3");
+const bgTheme = new Audio("../assets/sounds/bg_theme2.mp3");
 const barrelBlast = new Audio("../assets/sounds/barrel_blast.mp3");
 const barrelLoad = new Audio("../assets/sounds/barrel_load.mp3");
 
@@ -39,6 +39,25 @@ class Game {
     this.barrelBlast.volume = 0.2;
     this.barrelLoad = barrelLoad;
     this.barrelLoad.volume = 0.2;
+    this.audio = document.getElementById("audio");
+
+    this.audio.onclick = function() {
+      if (audio.className === "on") {
+        audio.classList.add("off");
+        audio.classList.remove("on");
+        audio.src = "../assets/images/mute.png";
+        bgTheme.volume = 0;
+        barrelBlast.volume = 0;
+        barrelLoad.volume = 0;
+      } else {
+        audio.classList.add("on");
+        audio.classList.remove("off");
+        audio.src = "../assets/images/speaker.png";
+        bgTheme.volume = 0.1;
+        barrelBlast.volume = 0.2;
+        barrelLoad.volume = 0.2;
+      }
+    };
 
     this.animate();
     this.detectKeyPress();
@@ -228,13 +247,8 @@ class Game {
     this.blinkCounter += 1;
 
     ctx.drawImage(this.backgroundImg, 0, 0, 1000, 600);
+
     ctx.textAlign = "center";
-    ctx.font = "120px 'Teko'";
-    ctx.strokeStyle = "black";
-    ctx.lineWidth = 4;
-    ctx.strokeText(`Cannonball`, 500, 200);
-    ctx.fillStyle = "#C6D8FF";
-    ctx.fillText(`Cannonball`, 500, 200);
 
     ctx.drawImage(this.cannonEmptyRightImg, 305, 250, 90, 90);
     ctx.drawImage(this.monkeyBallImg, 455, 250, 90, 90);
@@ -249,12 +263,26 @@ class Game {
     ctx.fillText(`Earn 3x the points if you dare to traverse 2 cannons at a time!`, 500, 420);
 
     if (this.blinkCounter <= 120) {
+      ctx.font = "120px 'Teko'";
+      ctx.strokeStyle = "black";
+      ctx.lineWidth = 4;
+      ctx.strokeText(`Cannonball`, 500, 200);
+      ctx.fillStyle = "white";
+      ctx.fillText(`Cannonball`, 500, 200);
+
       ctx.strokeStyle = "black";
       ctx.fillStyle = "white";
       ctx.font = "40px 'Teko'";
       ctx.strokeText(`Press space to start`, 500, 500);
       ctx.fillText(`Press space to start`, 500, 500);
     } else if (this.blinkCounter > 120 && this.blinkCounter <= 240) {
+      ctx.font = "120px 'Teko'";
+      ctx.strokeStyle = "black";
+      ctx.lineWidth = 4;
+      ctx.strokeText(`Cannonball`, 500, 200);
+      ctx.fillStyle = "#C6D8FF";
+      ctx.fillText(`Cannonball`, 500, 200);
+
       ctx.strokeStyle = "black";
       ctx.fillStyle = "#C6D8FF";
       ctx.font = "40px 'Teko'";
