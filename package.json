@@ -11,9 +11,11 @@
   "author": "Peter Zeng",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "mongoose": "^5.4.3",
+    "node-fetch": "^2.3.0",
     "validator": "^10.10.0"
   },
   "devDependencies": {

@@ -31,7 +31,7 @@ class Game {
     this.successfulLanding = false;
     this.cannonSpeedX = 5;
     this.distanceMoved = 0;
-    this.highestScore = parseInt(localStorage.getItem("highScore"));
+    this.highestScore = parseInt(localStorage.getItem("highScore")) || 0;
 
     this.bgTheme = bgTheme;
     this.bgTheme.volume = 0.1;

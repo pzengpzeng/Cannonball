@@ -2,12 +2,15 @@ const express = require("express");
 const app = express();
 const db = require("./config/keys").mongoURI;
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
 const scores = require("./routes/api/scores");
+const path = require("path");
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.get("/", (req, res) => res.send("Hello World"));
+app.use(express.static("dist"));
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "./dist/index.html"));
+});
+
 app.use("/api/scores", scores);
 
 const port = process.env.PORT || 5000;
