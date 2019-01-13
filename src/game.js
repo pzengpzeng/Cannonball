@@ -1,8 +1,15 @@
 import Cannon from "./cannon";
 import Monkey from "./monkey";
 
-const backgroundImage = new Image();
-backgroundImage.src = "../assets/images/background.jpeg";
+const backgroundImg = new Image();
+backgroundImg.src = "../assets/images/background.jpeg";
+const monkeyBallImg = new Image();
+monkeyBallImg.src = "../assets/images/monkey-ball.png";
+const cannonEmptyRightImg = new Image();
+cannonEmptyRightImg.src = "../assets/images/cannon-empty-right.png";
+const cannonEmptyLeftImg = new Image();
+cannonEmptyLeftImg.src = "../assets/images/cannon-empty-left.png";
+
 const bgTheme = new Audio("../assets/sounds/bg_theme.mp3");
 const barrelBlast = new Audio("../assets/sounds/barrel_blast.mp3");
 const barrelLoad = new Audio("../assets/sounds/barrel_load.mp3");
@@ -10,7 +17,11 @@ const barrelLoad = new Audio("../assets/sounds/barrel_load.mp3");
 class Game {
   constructor(ctx) {
     this.ctx = ctx;
-    this.backgroundImage = backgroundImage;
+    this.backgroundImg = backgroundImg;
+    this.monkeyBallImg = monkeyBallImg;
+    this.cannonEmptyLeftImg = cannonEmptyLeftImg;
+    this.cannonEmptyRightImg = cannonEmptyRightImg;
+    this.blinkCounter = 0;
     this.score = 0;
     this.sessionStarted = false;
     this.gameOver = false;
@@ -214,17 +225,44 @@ class Game {
   }
 
   renderStartScreen(ctx) {
-    ctx.drawImage(this.backgroundImage, 0, 0, 1000, 600);
+    this.blinkCounter += 1;
+
+    ctx.drawImage(this.backgroundImg, 0, 0, 1000, 600);
     ctx.textAlign = "center";
     ctx.font = "120px 'Teko'";
     ctx.strokeStyle = "black";
     ctx.lineWidth = 4;
     ctx.strokeText(`Cannonball`, 500, 200);
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "#C6D8FF";
     ctx.fillText(`Cannonball`, 500, 200);
-    ctx.font = "40px 'Teko'";
-    ctx.strokeText(`Press space to start`, 500, 300);
-    ctx.fillText(`Press space to start`, 500, 300);
+
+    ctx.drawImage(this.cannonEmptyRightImg, 305, 250, 90, 90);
+    ctx.drawImage(this.monkeyBallImg, 455, 250, 90, 90);
+    ctx.drawImage(this.cannonEmptyLeftImg, 605, 250, 90, 90);
+
+    ctx.strokeStyle = "white";
+    ctx.fillStyle = "black";
+    ctx.font = "24px 'Teko'";
+    ctx.strokeText(`Earn 1 point for every cannon you traverse`, 500, 390);
+    ctx.fillText(`Earn 1 point for every cannon you traverse`, 500, 390);
+    ctx.strokeText(`Earn 3x the points if you dare to traverse 2 cannons at a time!`, 500, 420);
+    ctx.fillText(`Earn 3x the points if you dare to traverse 2 cannons at a time!`, 500, 420);
+
+    if (this.blinkCounter <= 120) {
+      ctx.strokeStyle = "black";
+      ctx.fillStyle = "white";
+      ctx.font = "40px 'Teko'";
+      ctx.strokeText(`Press space to start`, 500, 500);
+      ctx.fillText(`Press space to start`, 500, 500);
+    } else if (this.blinkCounter > 120 && this.blinkCounter <= 240) {
+      ctx.strokeStyle = "black";
+      ctx.fillStyle = "#C6D8FF";
+      ctx.font = "40px 'Teko'";
+      ctx.strokeText(`Press space to start`, 500, 500);
+      ctx.fillText(`Press space to start`, 500, 500);
+    } else {
+      this.blinkCounter = 0;
+    }
   }
 
   renderGameOver(ctx) {
@@ -255,7 +293,7 @@ class Game {
   }
 
   drawBackground(ctx) {
-    ctx.drawImage(this.backgroundImage, 0, 0, 1000, 600);
+    ctx.drawImage(this.backgroundImg, 0, 0, 1000, 600);
     ctx.textAlign = "right";
     ctx.font = "30px 'Teko'";
     ctx.strokeStyle = "white";
