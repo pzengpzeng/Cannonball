@@ -98,23 +98,6 @@ class Game {
         }
       }
     });
-
-    window.addEventListener("mousedown", event => {
-      const RIGHTEMPTY = "RIGHTEMPTY";
-
-      if (!this.sessionStarted) {
-        this.sessionStarted = true;
-        this.bgTheme.play();
-        this.bgTheme.loop = true;
-      } else if (this.gameOver) {
-        this.reinitialize();
-      } else {
-        this.addMonkey();
-        this.barrelBlast.play();
-        this.monkeyInFlight = true;
-        this.cannons[0].horizontalD = RIGHTEMPTY;
-      }
-    });
   }
 
   detectCollisions() {
@@ -233,15 +216,15 @@ class Game {
   renderStartScreen(ctx) {
     ctx.drawImage(this.backgroundImage, 0, 0, 1000, 600);
     ctx.textAlign = "center";
-    ctx.font = "80px 'Teko'";
+    ctx.font = "120px 'Teko'";
     ctx.strokeStyle = "black";
     ctx.lineWidth = 4;
     ctx.strokeText(`Cannonball`, 500, 200);
     ctx.fillStyle = "white";
     ctx.fillText(`Cannonball`, 500, 200);
-    ctx.font = "30px 'Teko'";
-    ctx.strokeText(`Press spacebar to launch yourself from cannon to cannon!`, 500, 300);
-    ctx.fillText(`Press spacebar to launch yourself from cannon to cannon!`, 500, 300);
+    ctx.font = "40px 'Teko'";
+    ctx.strokeText(`Press space to start`, 500, 300);
+    ctx.fillText(`Press space to start`, 500, 300);
   }
 
   renderGameOver(ctx) {
@@ -254,8 +237,9 @@ class Game {
     ctx.fillText(`GAME OVER`, 500, 200);
 
     ctx.font = "40px 'Teko'";
-    ctx.strokeStyle = "#ffbf00";
+    ctx.strokeStyle = "white";
     ctx.lineWidth = 4;
+    ctx.fillStyle = "black";
     ctx.strokeText(`Your best score: ${this.highestScore}`, 500, 300);
     ctx.strokeText(`Recent score: ${this.score}`, 500, 350);
 
@@ -272,11 +256,9 @@ class Game {
 
   drawBackground(ctx) {
     ctx.drawImage(this.backgroundImage, 0, 0, 1000, 600);
-    // ctx.fillStyle = "black";
-    // ctx.fillRect(0, 0, 1000, 600);
     ctx.textAlign = "right";
     ctx.font = "30px 'Teko'";
-    ctx.strokeStyle = "#ffbf00";
+    ctx.strokeStyle = "white";
     ctx.lineWidth = 4;
     ctx.strokeText(`Score: ${this.score}`, 990, 30);
     ctx.fillStyle = "black";
@@ -286,8 +268,6 @@ class Game {
   drawCannons(ctx) {
     this.cannons.forEach(cannon => {
       cannon.drawStationary(ctx);
-      // cannon.degrees += 0.3;
-      // cannon.drawRotated(ctx, cannon.degrees);
     });
   }
 
