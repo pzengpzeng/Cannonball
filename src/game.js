@@ -23,11 +23,11 @@ class Game {
     this.highestScore = parseInt(localStorage.getItem("highScore"));
 
     this.bgTheme = bgTheme;
-    this.bgTheme.volume = 0.01;
+    this.bgTheme.volume = 0.1;
     this.barrelBlast = barrelBlast;
-    this.barrelBlast.volume = 0.01;
+    this.barrelBlast.volume = 0.2;
     this.barrelLoad = barrelLoad;
-    this.barrelLoad.volume = 0.01;
+    this.barrelLoad.volume = 0.2;
 
     this.animate();
     this.detectKeyPress();
@@ -96,6 +96,23 @@ class Game {
           this.monkeyInFlight = true;
           this.cannons[0].horizontalD = RIGHTEMPTY;
         }
+      }
+    });
+
+    window.addEventListener("mousedown", event => {
+      const RIGHTEMPTY = "RIGHTEMPTY";
+
+      if (!this.sessionStarted) {
+        this.sessionStarted = true;
+        this.bgTheme.play();
+        this.bgTheme.loop = true;
+      } else if (this.gameOver) {
+        this.reinitialize();
+      } else {
+        this.addMonkey();
+        this.barrelBlast.play();
+        this.monkeyInFlight = true;
+        this.cannons[0].horizontalD = RIGHTEMPTY;
       }
     });
   }

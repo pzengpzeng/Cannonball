@@ -24,7 +24,7 @@ class Monkey {
   }
 
   move() {
-    this.position[0] += 3;
+    this.position[0] += 4;
   }
 }
 
