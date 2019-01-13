@@ -4,12 +4,20 @@
   "description": "",
   "private": true,
   "scripts": {
-    "webpack": "webpack --watch --mode=development"
+    "webpack": "webpack --watch --mode=development",
+    "start": "node app.js",
+    "server": "nodemon app.js"
   },
   "author": "Peter Zeng",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "mongoose": "^5.4.3",
+    "validator": "^10.10.0"
+  },
   "devDependencies": {
+    "nodemon": "^1.18.9",
     "webpack": "^4.28.4",
     "webpack-cli": "^3.2.1"
   }
