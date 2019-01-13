@@ -12,39 +12,58 @@ class Game {
     this.ctx = ctx;
     this.backgroundImage = backgroundImage;
     this.score = 0;
+    this.sessionStarted = false;
     this.gameOver = false;
     this.cannons = [];
     this.monkey = null;
-    this.successfulLaunch = false;
+    this.monkeyInFlight = false;
+    this.successfulLanding = false;
+    this.cannonSpeedX = 5;
     this.distanceMoved = 0;
     this.highestScore = parseInt(localStorage.getItem("highScore"));
 
     this.bgTheme = bgTheme;
+    this.bgTheme.volume = 0.01;
     this.barrelBlast = barrelBlast;
+    this.barrelBlast.volume = 0.01;
     this.barrelLoad = barrelLoad;
+    this.barrelLoad.volume = 0.01;
 
     this.animate();
     this.detectKeyPress();
   }
 
+  reinitialize() {
+    this.score = 0;
+    this.gameOver = false;
+    this.cannons = [];
+    this.monkey = null;
+    this.monkeyInFlight = false;
+    this.distanceMoved = 0;
+  }
+
   animate() {
-    if (this.cannons.length < 3) {
-      this.addCannon();
+    if (!this.monkeyInFlight) {
+      if (this.cannons.length < 3) {
+        this.addCannon();
+      }
     }
+
+    if (this.monkeyInFlight && !this.successfulLanding) {
+      this.moveAllCannons();
+      this.distanceMoved += this.cannonSpeedX;
+    } else if (this.cannons[0].position[0] >= 155) {
+      this.moveAllCannons();
+      this.distanceMoved += this.cannonSpeedX;
+    } else {
+      this.monkeyInFlight = false;
+      this.successfulLanding = false;
+      this.distanceMoved = 0;
+    }
+
+    this.step(this.ctx);
 
     this.draw(this.ctx);
-
-    if (this.successfulLaunch) {
-      if (this.distanceMoved <= 295) {
-        this.moveAllCannons();
-        this.distanceMoved += 5;
-      } else {
-        this.successfulLaunch = false;
-        this.distanceMoved = 0;
-      }
-    } else {
-      this.step(this.ctx);
-    }
 
     requestAnimationFrame(this.animate.bind(this));
   }
@@ -65,14 +84,16 @@ class Game {
     window.addEventListener("keydown", event => {
       const RIGHTEMPTY = "RIGHTEMPTY";
       if (event.keyCode === 32) {
-        if (this.gameOver) {
-          location.reload();
+        if (!this.sessionStarted) {
+          this.sessionStarted = true;
+          this.bgTheme.play();
+          this.bgTheme.loop = true;
+        } else if (this.gameOver) {
+          this.reinitialize();
         } else {
           this.addMonkey();
           this.barrelBlast.play();
-          this.bgTheme.play();
-          this.bgTheme.loop = true;
-          this.successfulLaunch = true;
+          this.monkeyInFlight = true;
           this.cannons[0].horizontalD = RIGHTEMPTY;
         }
       }
@@ -80,11 +101,16 @@ class Game {
   }
 
   detectCollisions() {
-    let nextCannonX, nextCannonY, monkeyX, monkeyY;
+    let nextCannonX, nextCannonY, lastCannonX, lastCannonY, monkeyX, monkeyY;
 
     if (this.cannons[1]) {
       nextCannonX = this.cannons[1].position[0];
       nextCannonY = this.cannons[1].position[1];
+    }
+
+    if (this.cannons[2]) {
+      lastCannonX = this.cannons[2].position[0];
+      lastCannonY = this.cannons[2].position[1];
     }
 
     if (this.monkey) {
@@ -103,7 +129,20 @@ class Game {
     ) {
       this.removeMonkey();
       this.removeCannon();
+      this.successfulLanding = true;
       this.score += 1;
+      this.barrelLoad.play();
+    } else if (
+      monkeyX + 30 >= lastCannonX + 30 &&
+      monkeyX + 30 <= lastCannonX + 100 &&
+      monkeyY + 30 >= lastCannonY + 30 &&
+      monkeyY + 30 <= lastCannonY + 100
+    ) {
+      this.removeMonkey();
+      this.removeCannon();
+      this.removeCannon();
+      this.successfulLanding = true;
+      this.score += 3;
       this.barrelLoad.play();
     } else if (
       monkeyX <= xBoundaries[0] ||
@@ -113,14 +152,15 @@ class Game {
     ) {
       this.gameOver = true;
       if (this.score > this.highestScore) {
-        this.highestScore = localStorage.setItem("highScore", this.score);
+        localStorage.setItem("highScore", this.score);
+        this.highestScore = parseInt(localStorage.getItem("highScore"));
       }
     }
   }
 
   moveAllCannons() {
     this.cannons.forEach(cannon => {
-      cannon.moveX(5);
+      cannon.moveX(this.cannonSpeedX);
     });
   }
 
@@ -162,13 +202,29 @@ class Game {
   }
 
   draw(ctx) {
-    if (this.gameOver) {
+    if (!this.sessionStarted) {
+      this.renderStartScreen(ctx);
+    } else if (this.gameOver) {
       this.renderGameOver(ctx);
     } else {
       this.drawBackground(ctx);
       this.drawCannons(ctx);
       this.drawMonkey(ctx);
     }
+  }
+
+  renderStartScreen(ctx) {
+    ctx.drawImage(this.backgroundImage, 0, 0, 1000, 600);
+    ctx.textAlign = "center";
+    ctx.font = "80px 'Teko'";
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 4;
+    ctx.strokeText(`Cannonball`, 500, 200);
+    ctx.fillStyle = "white";
+    ctx.fillText(`Cannonball`, 500, 200);
+    ctx.font = "30px 'Teko'";
+    ctx.strokeText(`Press spacebar to launch yourself from cannon to cannon!`, 500, 300);
+    ctx.fillText(`Press spacebar to launch yourself from cannon to cannon!`, 500, 300);
   }
 
   renderGameOver(ctx) {
@@ -187,26 +243,27 @@ class Game {
     ctx.strokeText(`Recent score: ${this.score}`, 500, 350);
 
     ctx.fillStyle = "black";
-    ctx.fillText(`Your highest score: ${this.highestScore}`, 500, 300);
+    ctx.fillText(`Your best score: ${this.highestScore}`, 500, 300);
     ctx.fillText(`Recent score: ${this.score}`, 500, 350);
 
     ctx.strokeStyle = "black";
     ctx.lineWidth = 4;
-    ctx.strokeText(`PRESS SPACE TO PLAY AGAIN!`, 500, 450);
+    ctx.strokeText(`PRESS SPACE TO CONTINUE PLAYING`, 500, 450);
     ctx.fillStyle = "white";
-    ctx.fillText(`PRESS SPACE TO PLAY AGAIN!`, 500, 450);
+    ctx.fillText(`PRESS SPACE TO CONTINUE PLAYING`, 500, 450);
   }
 
   drawBackground(ctx) {
     ctx.drawImage(this.backgroundImage, 0, 0, 1000, 600);
     // ctx.fillStyle = "black";
     // ctx.fillRect(0, 0, 1000, 600);
+    ctx.textAlign = "right";
     ctx.font = "30px 'Teko'";
     ctx.strokeStyle = "#ffbf00";
     ctx.lineWidth = 4;
-    ctx.strokeText(`Score: ${this.score}`, 860, 30);
+    ctx.strokeText(`Score: ${this.score}`, 990, 30);
     ctx.fillStyle = "black";
-    ctx.fillText(`Score: ${this.score}`, 860, 30);
+    ctx.fillText(`Score: ${this.score}`, 990, 30);
   }
 
   drawCannons(ctx) {
