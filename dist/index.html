@@ -17,8 +17,27 @@
     <div class="canvas-div">
       <canvas id="canvas" width="1000px" height="600px"></canvas>
       <img src="../assets/images/speaker.png" id="audio" class="on"></img>
+      <div class="leaderboard-container">
+        <h1 class="leaderboard-title">Leaderboard</h1>
+        <ul id="leaderboard"></ul>
+      </div>
     </div>
-    <div id="leaderboard"></div>
+    <div class="stats-container">
+      <div class="stats-left-container">
+        <h1 class="tidbits">CANNONBALL TIDBITS!</h1>
+      </div>
+      <div class="stats-mid-container">
+        <div>Total games played:</div>
+        <div>Average score:</div>
+        <div>Median score:</div>
+      </div>
+      <div class="stats-right-container">
+        <div>95% of all games score X points or lower</div>
+        <div>XX% of all games score 0 or 1.</div>
+        <div>If you happen to score X points or higher, you're doing better than 99% of all games! </div>
+      </div>
+    </div>
+   
     <script type="application/javascript" src="./main.js"></script>
   </body>
 </html>
