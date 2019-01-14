@@ -19,10 +19,6 @@ const barrelLoad = new Audio("../assets/sounds/barrel_load.mp3");
 class Game {
   constructor(ctx) {
     this.ctx = ctx;
-    this.backgroundImg = backgroundImg;
-    this.monkeyBallImg = monkeyBallImg;
-    this.cannonEmptyLeftImg = cannonEmptyLeftImg;
-    this.cannonEmptyRightImg = cannonEmptyRightImg;
     this.blinkCounter = 0;
     this.score = 0;
     this.scoreSaved = false;
@@ -35,6 +31,12 @@ class Game {
     this.cannonSpeedX = 5;
     this.distanceMoved = 0;
     this.highestScore = parseInt(localStorage.getItem("highScore")) || 0;
+
+    this.leaderboard = document.getElementById("leaderboard");
+    this.backgroundImg = backgroundImg;
+    this.monkeyBallImg = monkeyBallImg;
+    this.cannonEmptyLeftImg = cannonEmptyLeftImg;
+    this.cannonEmptyRightImg = cannonEmptyRightImg;
 
     this.bgTheme = bgTheme;
     this.bgTheme.volume = 0.1;
@@ -64,10 +66,38 @@ class Game {
 
     this.animate();
     this.detectKeyPress();
+
+    this.scores = this.fetchLeaderboard();
   }
 
-  fetchScores() {
-    return axios.get("/scores").then(res => console.log(res.data));
+  fetchLeaderboard() {
+    return axios.get("/scores").then(res => {
+      const scores = res.data;
+
+      for (let i = 0; i < 50; i++) {
+        const rankDiv = document.createElement("DIV");
+        const rankText = document.createTextNode(`${i + 1}.`);
+        rankDiv.setAttribute("class", "rank-div");
+        rankDiv.appendChild(rankText);
+
+        const usernameDiv = document.createElement("DIV");
+        const usernameText = document.createTextNode(`Username`);
+        usernameDiv.setAttribute("class", "username-div");
+        usernameDiv.appendChild(usernameText);
+
+        const scoreDiv = document.createElement("DIV");
+        const scoreText = document.createTextNode(`${scores[i].score}`);
+        scoreDiv.setAttribute("class", "score-div");
+        scoreDiv.appendChild(scoreText);
+
+        const li = document.createElement("LI");
+        li.setAttribute("class", "leaderboard-li");
+        li.appendChild(rankDiv);
+        li.appendChild(usernameDiv);
+        li.appendChild(scoreDiv);
+        this.leaderboard.appendChild(li);
+      }
+    });
   }
 
   createScore(score) {
@@ -139,6 +169,18 @@ class Game {
         }
       }
     });
+  }
+
+  draw(ctx) {
+    if (!this.sessionStarted) {
+      this.renderStartScreen(ctx);
+    } else if (this.gameOver) {
+      this.renderGameOver(ctx);
+    } else {
+      this.drawBackground(ctx);
+      this.drawCannons(ctx);
+      this.drawMonkey(ctx);
+    }
   }
 
   detectCollisions() {
@@ -247,18 +289,6 @@ class Game {
     this.monkey = null;
   }
 
-  draw(ctx) {
-    if (!this.sessionStarted) {
-      this.renderStartScreen(ctx);
-    } else if (this.gameOver) {
-      this.renderGameOver(ctx);
-    } else {
-      this.drawBackground(ctx);
-      this.drawCannons(ctx);
-      this.drawMonkey(ctx);
-    }
-  }
-
   renderStartScreen(ctx) {
     this.blinkCounter += 1;
 
@@ -270,6 +300,13 @@ class Game {
     ctx.drawImage(this.monkeyBallImg, 455, 250, 90, 90);
     ctx.drawImage(this.cannonEmptyLeftImg, 605, 250, 90, 90);
 
+    ctx.font = "120px 'Teko'";
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 4;
+    ctx.strokeText(`Cannonball`, 500, 200);
+    ctx.fillStyle = "#C6D8FF";
+    ctx.fillText(`Cannonball`, 500, 200);
+
     ctx.strokeStyle = "white";
     ctx.fillStyle = "black";
     ctx.font = "24px 'Teko'";
@@ -279,26 +316,12 @@ class Game {
     ctx.fillText(`Earn 3x the points if you dare to traverse 2 cannons at a time!`, 500, 420);
 
     if (this.blinkCounter <= 120) {
-      ctx.font = "120px 'Teko'";
-      ctx.strokeStyle = "black";
-      ctx.lineWidth = 4;
-      ctx.strokeText(`Cannonball`, 500, 200);
-      ctx.fillStyle = "white";
-      ctx.fillText(`Cannonball`, 500, 200);
-
       ctx.strokeStyle = "black";
       ctx.fillStyle = "white";
       ctx.font = "40px 'Teko'";
       ctx.strokeText(`Press space to start`, 500, 500);
       ctx.fillText(`Press space to start`, 500, 500);
     } else if (this.blinkCounter > 120 && this.blinkCounter <= 240) {
-      ctx.font = "120px 'Teko'";
-      ctx.strokeStyle = "black";
-      ctx.lineWidth = 4;
-      ctx.strokeText(`Cannonball`, 500, 200);
-      ctx.fillStyle = "#C6D8FF";
-      ctx.fillText(`Cannonball`, 500, 200);
-
       ctx.strokeStyle = "black";
       ctx.fillStyle = "#C6D8FF";
       ctx.font = "40px 'Teko'";
