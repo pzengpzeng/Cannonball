@@ -3,9 +3,39 @@ body {
   height: 100%;
 }
 
+.body {
+  display: flex;
+  flex-direction: column;
+}
+
+.stats-container {
+  max-width: 1290px;
+  min-height: 100px;
+  border: 5px solid black;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Teko";
+  font-size: 22px;
+}
+
+.tidbits {
+  font-size: 32px;
+}
+
+.stats-left-container {
+  min-width: 280px;
+}
+
+.stats-mid-container {
+  min-width: 300px;
+}
+
 .canvas-div {
   display: flex;
-  padding: 120px;
+  padding-top: 100px;
+  padding-bottom: 20px;
   justify-content: center;
 }
 
@@ -18,4 +48,40 @@ body {
   top: 570px;
   right: 40px;
   height: 30px;
+}
+
+.leaderboard-container {
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+  max-height: 600px;
+  overflow: scroll;
+  border: 5px solid black;
+}
+
+.leaderboard-title {
+  text-align: center;
+  font-family: "Teko";
+  font-size: 40px;
+  padding-bottom: 10px;
+}
+
+.leaderboard-li {
+  display: flex;
+}
+
+.rank-div,
+.username-div,
+.score-div {
+  font-family: "Teko";
+  font-size: 24px;
+}
+
+.rank-div {
+  padding-left: 17px;
+  min-width: 60px;
+}
+
+.username-div {
+  min-width: 125px;
 }
