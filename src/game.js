@@ -304,7 +304,7 @@ class Game {
     ctx.strokeStyle = "black";
     ctx.lineWidth = 4;
     ctx.strokeText(`Cannonball`, 500, 200);
-    ctx.fillStyle = "#C6D8FF";
+    ctx.fillStyle = "#F5C028";
     ctx.fillText(`Cannonball`, 500, 200);
 
     ctx.strokeStyle = "white";
@@ -323,7 +323,7 @@ class Game {
       ctx.fillText(`Press space to start`, 500, 500);
     } else if (this.blinkCounter > 120 && this.blinkCounter <= 240) {
       ctx.strokeStyle = "black";
-      ctx.fillStyle = "#C6D8FF";
+      ctx.fillStyle = "#F5C028";
       ctx.font = "40px 'Teko'";
       ctx.strokeText(`Press space to start`, 500, 500);
       ctx.fillText(`Press space to start`, 500, 500);
