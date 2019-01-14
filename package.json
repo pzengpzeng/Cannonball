@@ -6,7 +6,8 @@
   "scripts": {
     "webpack": "webpack --watch --mode=development",
     "start": "node app.js",
-    "server": "nodemon app.js"
+    "server": "nodemon app.js",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix dist && npm run build --prefix dist"
   },
   "author": "Peter Zeng",
   "license": "ISC",
