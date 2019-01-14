@@ -7,7 +7,7 @@
     "webpack": "webpack --watch --mode=development",
     "start": "node app.js",
     "server": "nodemon app.js",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix dist && npm run build --prefix dist"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
   },
   "author": "Peter Zeng",
   "license": "ISC",
