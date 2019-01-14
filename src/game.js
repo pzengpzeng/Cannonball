@@ -1,6 +1,8 @@
 import Cannon from "./cannon";
 import Monkey from "./monkey";
 
+const axios = require("axios");
+
 const backgroundImg = new Image();
 backgroundImg.src = "../assets/images/background.jpeg";
 const monkeyBallImg = new Image();
@@ -23,6 +25,7 @@ class Game {
     this.cannonEmptyRightImg = cannonEmptyRightImg;
     this.blinkCounter = 0;
     this.score = 0;
+    this.scoreSaved = false;
     this.sessionStarted = false;
     this.gameOver = false;
     this.cannons = [];
@@ -63,12 +66,20 @@ class Game {
     this.detectKeyPress();
   }
 
+  fetchScores() {
+    return axios.get("/scores").then(res => console.log(res.data));
+  }
+
+  createScore(score) {
+    return axios.post("/scores", score);
+  }
+
   reinitialize() {
     this.score = 0;
+    this.scoreSaved = false;
     this.gameOver = false;
     this.cannons = [];
     this.monkey = null;
-    this.monkeyInFlight = false;
     this.distanceMoved = 0;
   }
 
@@ -113,7 +124,7 @@ class Game {
   detectKeyPress() {
     window.addEventListener("keydown", event => {
       const RIGHTEMPTY = "RIGHTEMPTY";
-      if (event.keyCode === 32) {
+      if (event.keyCode === 32 && !this.monkeyInFlight) {
         if (!this.sessionStarted) {
           this.sessionStarted = true;
           this.bgTheme.play();
@@ -181,9 +192,14 @@ class Game {
       monkeyY + 30 >= yBoundaries[1]
     ) {
       this.gameOver = true;
+      this.monkeyInFlight = false;
       if (this.score > this.highestScore) {
         localStorage.setItem("highScore", this.score);
         this.highestScore = parseInt(localStorage.getItem("highScore"));
+      }
+      if (!this.scoreSaved) {
+        this.createScore({ score: this.score });
+        this.scoreSaved = true;
       }
     }
   }
