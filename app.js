@@ -2,8 +2,11 @@ const express = require("express");
 const app = express();
 const db = require("./config/keys").mongoURI;
 const mongoose = require("mongoose");
-const scores = require("./routes/api/scores");
 const path = require("path");
+const Score = require("./models/Score");
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.use(express.static("dist"));
 
@@ -11,7 +14,21 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "./dist/index.html"));
 });
 
-app.use("/api/scores", scores);
+app.get("/scores", (req, res) => {
+  Score.find()
+    .sort({ score: -1 })
+    .then(scores => {
+      if (scores) {
+        return res.json(scores);
+      }
+    });
+});
+
+app.post("/scores", (req, res) => {
+  new Score({ score: req.body.score }).save().then(newScore => {
+    res.json(newScore);
+  });
+});
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server is running on port ${port}`));
