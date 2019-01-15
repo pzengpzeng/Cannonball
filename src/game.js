@@ -1,17 +1,9 @@
 import Cannon from "./cannon";
 import Monkey from "./monkey";
+import { renderStartScreen, renderGameOver, drawBackground, drawCannons, drawMonkey } from "./draw";
 
 const axios = require("axios");
 const usernameGenerator = require("username-generator");
-
-const backgroundImg = new Image();
-backgroundImg.src = "../assets/images/background.jpeg";
-const monkeyBallImg = new Image();
-monkeyBallImg.src = "../assets/images/monkey-ball.png";
-const cannonEmptyRightImg = new Image();
-cannonEmptyRightImg.src = "../assets/images/cannon-empty-right.png";
-const cannonEmptyLeftImg = new Image();
-cannonEmptyLeftImg.src = "../assets/images/cannon-empty-left.png";
 
 const bgTheme = new Audio("../assets/sounds/bg_theme2.mp3");
 const barrelBlast = new Audio("../assets/sounds/barrel_blast.mp3");
@@ -38,10 +30,6 @@ class Game {
     this.leaderboard = document.getElementById("leaderboard");
     this.statsMidContainer = document.getElementById("stats-mid-container");
     this.statsRightContainer = document.getElementById("stats-right-container");
-    this.backgroundImg = backgroundImg;
-    this.monkeyBallImg = monkeyBallImg;
-    this.cannonEmptyLeftImg = cannonEmptyLeftImg;
-    this.cannonEmptyRightImg = cannonEmptyRightImg;
 
     this.bgTheme = bgTheme;
     this.bgTheme.volume = 0.1;
@@ -257,18 +245,6 @@ class Game {
     });
   }
 
-  draw(ctx) {
-    if (!this.sessionStarted) {
-      this.renderStartScreen(ctx);
-    } else if (this.gameOver) {
-      this.renderGameOver(ctx);
-    } else {
-      this.drawBackground(ctx);
-      this.drawCannons(ctx);
-      this.drawMonkey(ctx);
-    }
-  }
-
   detectCollisions() {
     let nextCannonX, nextCannonY, lastCannonX, lastCannonY, monkeyX, monkeyY;
 
@@ -375,109 +351,19 @@ class Game {
     this.monkey = null;
   }
 
-  renderStartScreen(ctx) {
-    this.startBlinkCounter += 1;
-
-    ctx.drawImage(this.backgroundImg, 0, 0, 1000, 600);
-
-    ctx.textAlign = "center";
-
-    ctx.drawImage(this.cannonEmptyRightImg, 305, 250, 90, 90);
-    ctx.drawImage(this.monkeyBallImg, 455, 250, 90, 90);
-    ctx.drawImage(this.cannonEmptyLeftImg, 605, 250, 90, 90);
-
-    ctx.font = "120px 'Teko'";
-    ctx.strokeStyle = "black";
-    ctx.lineWidth = 4;
-    ctx.strokeText(`Monkeyball`, 500, 200);
-    ctx.fillStyle = "#F5C028";
-    ctx.fillText(`Monkeyball`, 500, 200);
-
-    ctx.strokeStyle = "white";
-    ctx.fillStyle = "black";
-    ctx.font = "36px 'Teko'";
-    ctx.strokeText(`1 point for every successful landing`, 500, 390);
-    ctx.fillText(`1 point for every successful landing`, 500, 390);
-    ctx.strokeText(`3 points for every successful double jump!`, 500, 440);
-    ctx.fillText(`3 points for every successful double jump!`, 500, 440);
-
-    if (this.startBlinkCounter <= 120) {
-      ctx.strokeStyle = "black";
-      ctx.fillStyle = "#F5C028";
-      ctx.font = "40px 'Teko'";
-      ctx.strokeText(`Press space to start`, 500, 500);
-      ctx.fillText(`Press space to start`, 500, 500);
-    } else if (this.startBlinkCounter > 120 && this.startBlinkCounter <= 240) {
-      ctx.strokeStyle = "black";
-      ctx.fillStyle = "white";
-      ctx.font = "40px 'Teko'";
-      ctx.strokeText(`Press space to start`, 500, 500);
-      ctx.fillText(`Press space to start`, 500, 500);
+  draw(ctx) {
+    if (!this.sessionStarted) {
+      renderStartScreen(ctx, this.startBlinkCounter);
+      this.startBlinkCounter += 1;
+      if (this.startBlinkCounter >= 240) this.startBlinkCounter = 0;
+    } else if (this.gameOver) {
+      renderGameOver(ctx, this.endBlinkCounter, this.highestScore, this.score);
+      this.endBlinkCounter += 1;
+      if (this.endBlinkCounter >= 240) this.endBlinkCounter = 0;
     } else {
-      this.startBlinkCounter = 0;
-    }
-  }
-
-  renderGameOver(ctx) {
-    this.endBlinkCounter += 1;
-
-    ctx.textAlign = "center";
-    ctx.font = "100px 'Teko'";
-    ctx.strokeStyle = "black";
-    ctx.lineWidth = 4;
-    ctx.strokeText(`GAME OVER`, 500, 200);
-    ctx.fillStyle = "#F5C028";
-    ctx.fillText(`GAME OVER`, 500, 200);
-
-    ctx.font = "50px 'Teko'";
-    ctx.strokeStyle = "white";
-    ctx.lineWidth = 4;
-    ctx.fillStyle = "black";
-    ctx.strokeText(`Your best score : ${this.highestScore}`, 500, 300);
-    ctx.strokeText(`Recent score : ${this.score}`, 500, 350);
-    ctx.fillText(`Your best score : ${this.highestScore}`, 500, 300);
-    ctx.fillText(`Recent score : ${this.score}`, 500, 350);
-
-    if (this.endBlinkCounter <= 90) {
-      ctx.strokeStyle = "black";
-      ctx.lineWidth = 4;
-      ctx.strokeText(`PRESS SPACE TO CONTINUE PLAYING`, 500, 450);
-      ctx.fillStyle = "#F5C028";
-      ctx.fillText(`PRESS SPACE TO CONTINUE PLAYING`, 500, 450);
-    } else if (this.endBlinkCounter > 90 && this.endBlinkCounter <= 180) {
-      ctx.strokeStyle = "black";
-      ctx.lineWidth = 4;
-      ctx.strokeText(`PRESS SPACE TO CONTINUE PLAYING`, 500, 450);
-      ctx.fillStyle = "#white";
-      ctx.fillText(`PRESS SPACE TO CONTINUE PLAYING`, 500, 450);
-    } else {
-      this.endBlinkCounter = 0;
-    }
-  }
-
-  drawBackground(ctx) {
-    ctx.drawImage(this.backgroundImg, 0, 0, 1000, 600);
-    ctx.textAlign = "right";
-    ctx.font = "30px 'Teko'";
-    ctx.strokeStyle = "black";
-    ctx.lineWidth = 4;
-    ctx.strokeText(`Score : ${this.score}`, 990, 60);
-    ctx.strokeText(`Welcome , ${this.username}!`, 990, 30);
-    ctx.fillStyle = "#F5C028";
-    ctx.fillText(`Score : ${this.score}`, 990, 60);
-    ctx.fillText(`Welcome , ${this.username}!`, 990, 30);
-  }
-
-  drawCannons(ctx) {
-    this.cannons.forEach(cannon => {
-      cannon.drawStationary(ctx);
-    });
-  }
-
-  drawMonkey(ctx) {
-    if (this.monkey) {
-      this.monkey.degrees += 5;
-      this.monkey.drawRotated(ctx, this.monkey.degrees);
+      drawBackground(ctx, this.score, this.username);
+      drawCannons(ctx, this.cannons);
+      drawMonkey(ctx, this.monkey);
     }
   }
 }
