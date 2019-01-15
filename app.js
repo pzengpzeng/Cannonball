@@ -25,7 +25,7 @@ app.get("/scores", (req, res) => {
 });
 
 app.post("/scores", (req, res) => {
-  new Score({ score: req.body.score }).save().then(newScore => {
+  new Score({ score: req.body.score, username: req.body.username }).save().then(newScore => {
     res.json(newScore);
   });
 });
