@@ -92,7 +92,7 @@ class Game {
       const scores = res.data;
 
       //Populates leaderboard with top 50 scores
-      for (let i = 0; i < scores.length; i++) {
+      for (let i = 0; i < 50; i++) {
         const rankDiv = document.createElement("DIV");
         const rankText = document.createTextNode(`${i + 1}.`);
         rankDiv.setAttribute("class", "rank-div");
