@@ -24,11 +24,11 @@ body {
   font-size: 32px;
 }
 
-.stats-left-container {
-  min-width: 280px;
+#stats-left-container {
+  min-width: 340px;
 }
 
-.stats-mid-container {
+#stats-mid-container {
   min-width: 300px;
 }
 
@@ -78,10 +78,10 @@ body {
 }
 
 .rank-div {
-  padding-left: 17px;
-  min-width: 60px;
+  padding-left: 20px;
+  min-width: 70px;
 }
 
 .username-div {
-  min-width: 125px;
+  min-width: 110px;
 }
