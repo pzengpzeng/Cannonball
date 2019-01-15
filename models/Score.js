@@ -6,6 +6,10 @@ const ScoreSchema = new Schema({
     type: Number,
     required: true
   },
+  username: {
+    type: String,
+    required: true
+  },
   date: {
     type: Date,
     default: Date.now
