@@ -1,0 +1,36 @@
+.footer-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 0 auto;
+  min-height: 50px;
+  max-width: 1300px;
+  padding-top: 18px;
+}
+
+.footer-name {
+  font-family: "Teko";
+  font-size: 32px;
+  padding-left: 35px;
+  color: #f5c028;
+  -webkit-text-fill-color: #f5c028;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: black;
+}
+
+.github-icon,
+.linkedin-icon {
+  width: 32px;
+  height: 32px;
+  padding-left: 25px;
+  transition: all 0.1s ease-in-out;
+}
+
+.github-icon:hover,
+.linkedin-icon:hover {
+  transform: scale(1.2);
+}
+
+.linkedin-icon {
+  padding-right: 10px;
+}
