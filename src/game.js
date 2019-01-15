@@ -33,6 +33,7 @@ class Game {
     this.highestScore = parseInt(localStorage.getItem("highScore")) || 0;
 
     this.leaderboard = document.getElementById("leaderboard");
+    this.statsMidContainer = document.getElementById("stats-mid-container");
     this.backgroundImg = backgroundImg;
     this.monkeyBallImg = monkeyBallImg;
     this.cannonEmptyLeftImg = cannonEmptyLeftImg;
@@ -67,13 +68,15 @@ class Game {
     this.animate();
     this.detectKeyPress();
 
-    this.scores = this.fetchLeaderboard();
+    this.scores = this.fetchScores();
   }
 
-  fetchLeaderboard() {
+  fetchScores() {
+    //Retreives all scores
     return axios.get("/scores").then(res => {
       const scores = res.data;
 
+      //Populates leaderboard with top 50 scores
       for (let i = 0; i < 50; i++) {
         const rankDiv = document.createElement("DIV");
         const rankText = document.createTextNode(`${i + 1}.`);
@@ -97,6 +100,59 @@ class Game {
         li.appendChild(scoreDiv);
         this.leaderboard.appendChild(li);
       }
+
+      //Calculate total games played, average score, and median score
+      const gamesPlayed = scores.length;
+      const middle = Math.floor(gamesPlayed / 2);
+      const medianScore = scores[middle].score;
+      let totalScore = 0;
+      let zeroOrOne = 0;
+      for (let i = 0; i < scores.length; i++) {
+        totalScore += scores[i].score;
+
+        if (scores[i].score === 0 || scores[i].score === 1) {
+          zeroOrOne += 1;
+        }
+      }
+      const averageScore = (totalScore / gamesPlayed).toFixed(2);
+
+      const gamesPlayedDiv = document.getElementById("games-played");
+      const gamesPlayedText = document.createTextNode(`Total games played: ${gamesPlayed}`);
+      gamesPlayedDiv.appendChild(gamesPlayedText);
+
+      const averageScoreDiv = document.getElementById("average-score");
+      const averageScoreText = document.createTextNode(`Average score: ${averageScore}`);
+      averageScoreDiv.appendChild(averageScoreText);
+
+      const medianScoreDiv = document.getElementById("median-score");
+      const medianScoreText = document.createTextNode(`Most common score: ${medianScore}`);
+      medianScoreDiv.appendChild(medianScoreText);
+
+      //__% of all games score 0 or 1 points
+      const zeroOrOnePercent = Math.floor((zeroOrOne / gamesPlayed) * 100);
+
+      const tidBitOneDiv = document.getElementById("tidbit-1");
+      const tidBitOneText = document.createTextNode(
+        `${zeroOrOnePercent}% of all games end between 0 and 1 points`
+      );
+      tidBitOneDiv.appendChild(tidBitOneText);
+
+      //95% of games score __ or lower
+      const percentile95 = gamesPlayed - Math.floor(0.95 * gamesPlayed);
+      const score95 = scores[percentile95].score;
+
+      const tidBitTwoDiv = document.getElementById("tidbit-2");
+      const tidBitTwoText = document.createTextNode(`95% of all games score ${score95} or lower`);
+      tidBitTwoDiv.appendChild(tidBitTwoText);
+
+      //If you score __ or higher, you're doing better than 99% of all games played
+      const percentile99 = gamesPlayed - Math.floor(0.99 * gamesPlayed);
+      const score99 = scores[percentile99].score;
+      const tidBitThreeDiv = document.getElementById("tidbit-3");
+      const tidBitThreeText = document.createTextNode(
+        `If you happen to score ${score99} points or higher, you're in the 99th percentile!`
+      );
+      tidBitThreeDiv.appendChild(tidBitThreeText);
     });
   }
 
