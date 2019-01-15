@@ -2,6 +2,7 @@ import Cannon from "./cannon";
 import Monkey from "./monkey";
 
 const axios = require("axios");
+const usernameGenerator = require("username-generator");
 
 const backgroundImg = new Image();
 backgroundImg.src = "../assets/images/background.jpeg";
@@ -19,6 +20,7 @@ const barrelLoad = new Audio("../assets/sounds/barrel_load.mp3");
 class Game {
   constructor(ctx) {
     this.ctx = ctx;
+    this.username = usernameGenerator.generateUsername("", 6);
     this.blinkCounter = 0;
     this.score = 0;
     this.scoreSaved = false;
@@ -30,10 +32,11 @@ class Game {
     this.successfulLanding = false;
     this.cannonSpeedX = 5;
     this.distanceMoved = 0;
-    this.highestScore = parseInt(localStorage.getItem("highScore")) || 0;
+    this.highestScore = parseInt(sessionStorage.getItem("highScore")) || 0;
 
     this.leaderboard = document.getElementById("leaderboard");
     this.statsMidContainer = document.getElementById("stats-mid-container");
+    this.statsRightContainer = document.getElementById("stats-right-container");
     this.backgroundImg = backgroundImg;
     this.monkeyBallImg = monkeyBallImg;
     this.cannonEmptyLeftImg = cannonEmptyLeftImg;
@@ -73,23 +76,35 @@ class Game {
 
   fetchScores() {
     //Retreives all scores
+    while (this.leaderboard.firstChild) {
+      this.leaderboard.removeChild(this.leaderboard.firstChild);
+    }
+
+    while (this.statsMidContainer.firstChild) {
+      this.statsMidContainer.removeChild(this.statsMidContainer.firstChild);
+    }
+
+    while (this.statsRightContainer.firstChild) {
+      this.statsRightContainer.removeChild(this.statsRightContainer.firstChild);
+    }
+
     return axios.get("/scores").then(res => {
       const scores = res.data;
 
       //Populates leaderboard with top 50 scores
-      for (let i = 0; i < 50; i++) {
+      for (let i = 0; i < scores.length; i++) {
         const rankDiv = document.createElement("DIV");
         const rankText = document.createTextNode(`${i + 1}.`);
         rankDiv.setAttribute("class", "rank-div");
         rankDiv.appendChild(rankText);
 
         const usernameDiv = document.createElement("DIV");
-        const usernameText = document.createTextNode(`Username`);
+        const usernameText = document.createTextNode(scores[i].username);
         usernameDiv.setAttribute("class", "username-div");
         usernameDiv.appendChild(usernameText);
 
         const scoreDiv = document.createElement("DIV");
-        const scoreText = document.createTextNode(`${scores[i].score}`);
+        const scoreText = document.createTextNode(scores[i].score);
         scoreDiv.setAttribute("class", "score-div");
         scoreDiv.appendChild(scoreText);
 
@@ -116,43 +131,56 @@ class Game {
       }
       const averageScore = (totalScore / gamesPlayed).toFixed(2);
 
-      const gamesPlayedDiv = document.getElementById("games-played");
-      const gamesPlayedText = document.createTextNode(`Total games played: ${gamesPlayed}`);
-      gamesPlayedDiv.appendChild(gamesPlayedText);
-
-      const averageScoreDiv = document.getElementById("average-score");
-      const averageScoreText = document.createTextNode(`Average score: ${averageScore}`);
-      averageScoreDiv.appendChild(averageScoreText);
-
-      const medianScoreDiv = document.getElementById("median-score");
+      const medianScoreDiv = document.createElement("DIV");
+      medianScoreDiv.setAttribute("id", "median-score");
       const medianScoreText = document.createTextNode(`Most common score: ${medianScore}`);
       medianScoreDiv.appendChild(medianScoreText);
+      this.statsMidContainer.appendChild(medianScoreDiv);
+
+      const averageScoreDiv = document.createElement("DIV");
+      averageScoreDiv.setAttribute("id", "average-score");
+      const averageScoreText = document.createTextNode(`Average score: ${averageScore}`);
+      averageScoreDiv.appendChild(averageScoreText);
+      this.statsMidContainer.appendChild(averageScoreDiv);
+
+      const gamesPlayedDiv = document.createElement("DIV");
+      gamesPlayedDiv.setAttribute("id", "games-played");
+      const gamesPlayedText = document.createTextNode(`Total games played: ${gamesPlayed}`);
+      gamesPlayedDiv.appendChild(gamesPlayedText);
+      this.statsMidContainer.appendChild(gamesPlayedDiv);
 
       //__% of all games score 0 or 1 points
       const zeroOrOnePercent = Math.floor((zeroOrOne / gamesPlayed) * 100);
 
-      const tidBitOneDiv = document.getElementById("tidbit-1");
+      const tidBitOneDiv = document.createElement("DIV");
+      tidBitOneDiv.setAttribute("id", "tidbit-1");
       const tidBitOneText = document.createTextNode(
         `${zeroOrOnePercent}% of all games end between 0 and 1 points`
       );
       tidBitOneDiv.appendChild(tidBitOneText);
+      this.statsRightContainer.appendChild(tidBitOneDiv);
 
       //95% of games score __ or lower
       const percentile95 = gamesPlayed - Math.floor(0.95 * gamesPlayed);
       const score95 = scores[percentile95].score;
 
-      const tidBitTwoDiv = document.getElementById("tidbit-2");
+      const tidBitTwoDiv = document.createElement("DIV");
+      tidBitTwoDiv.setAttribute("id", "tidbit-2");
       const tidBitTwoText = document.createTextNode(`95% of all games score ${score95} or lower`);
       tidBitTwoDiv.appendChild(tidBitTwoText);
+      this.statsRightContainer.appendChild(tidBitTwoDiv);
 
       //If you score __ or higher, you're doing better than 99% of all games played
       const percentile99 = gamesPlayed - Math.floor(0.99 * gamesPlayed);
       const score99 = scores[percentile99].score;
-      const tidBitThreeDiv = document.getElementById("tidbit-3");
+
+      const tidBitThreeDiv = document.createElement("DIV");
+      tidBitThreeDiv.setAttribute("id", "tidbit-3");
       const tidBitThreeText = document.createTextNode(
         `If you happen to score ${score99} points or higher, you're in the 99th percentile!`
       );
       tidBitThreeDiv.appendChild(tidBitThreeText);
+      this.statsRightContainer.appendChild(tidBitThreeDiv);
     });
   }
 
@@ -161,6 +189,7 @@ class Game {
   }
 
   reinitialize() {
+    this.fetchScores();
     this.score = 0;
     this.scoreSaved = false;
     this.gameOver = false;
@@ -292,11 +321,11 @@ class Game {
       this.gameOver = true;
       this.monkeyInFlight = false;
       if (this.score > this.highestScore) {
-        localStorage.setItem("highScore", this.score);
-        this.highestScore = parseInt(localStorage.getItem("highScore"));
+        sessionStorage.setItem("highScore", this.score);
+        this.highestScore = parseInt(sessionStorage.getItem("highScore"));
       }
       if (!this.scoreSaved) {
-        this.createScore({ score: this.score });
+        this.createScore({ score: this.score, username: this.username });
         this.scoreSaved = true;
       }
     }
@@ -419,11 +448,13 @@ class Game {
     ctx.drawImage(this.backgroundImg, 0, 0, 1000, 600);
     ctx.textAlign = "right";
     ctx.font = "30px 'Teko'";
-    ctx.strokeStyle = "white";
+    ctx.strokeStyle = "black";
     ctx.lineWidth = 4;
-    ctx.strokeText(`Score : ${this.score}`, 990, 30);
-    ctx.fillStyle = "black";
-    ctx.fillText(`Score : ${this.score}`, 990, 30);
+    ctx.strokeText(`Score : ${this.score}`, 990, 60);
+    ctx.strokeText(`Welcome , ${this.username}!`, 990, 30);
+    ctx.fillStyle = "#F5C028";
+    ctx.fillText(`Score : ${this.score}`, 990, 60);
+    ctx.fillText(`Welcome , ${this.username}!`, 990, 30);
   }
 
   drawCannons(ctx) {
