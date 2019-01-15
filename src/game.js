@@ -21,7 +21,8 @@ class Game {
   constructor(ctx) {
     this.ctx = ctx;
     this.username = usernameGenerator.generateUsername("", 6);
-    this.blinkCounter = 0;
+    this.startBlinkCounter = 0;
+    this.endBlinkCounter = 0;
     this.score = 0;
     this.scoreSaved = false;
     this.sessionStarted = false;
@@ -92,7 +93,7 @@ class Game {
       const scores = res.data;
 
       //Populates leaderboard with top 50 scores
-      for (let i = 0; i < 50; i++) {
+      for (let i = 0; i < 20; i++) {
         const rankDiv = document.createElement("DIV");
         const rankText = document.createTextNode(`${i + 1}.`);
         rankDiv.setAttribute("class", "rank-div");
@@ -375,7 +376,7 @@ class Game {
   }
 
   renderStartScreen(ctx) {
-    this.blinkCounter += 1;
+    this.startBlinkCounter += 1;
 
     ctx.drawImage(this.backgroundImg, 0, 0, 1000, 600);
 
@@ -388,60 +389,70 @@ class Game {
     ctx.font = "120px 'Teko'";
     ctx.strokeStyle = "black";
     ctx.lineWidth = 4;
-    ctx.strokeText(`Cannonball`, 500, 200);
+    ctx.strokeText(`Monkeyball`, 500, 200);
     ctx.fillStyle = "#F5C028";
-    ctx.fillText(`Cannonball`, 500, 200);
+    ctx.fillText(`Monkeyball`, 500, 200);
 
     ctx.strokeStyle = "white";
     ctx.fillStyle = "black";
-    ctx.font = "24px 'Teko'";
-    ctx.strokeText(`Earn 1 point for every cannon you traverse`, 500, 390);
-    ctx.fillText(`Earn 1 point for every cannon you traverse`, 500, 390);
-    ctx.strokeText(`Earn 3x the points if you dare to traverse 2 cannons at a time!`, 500, 420);
-    ctx.fillText(`Earn 3x the points if you dare to traverse 2 cannons at a time!`, 500, 420);
+    ctx.font = "36px 'Teko'";
+    ctx.strokeText(`1 point for every successful landing`, 500, 390);
+    ctx.fillText(`1 point for every successful landing`, 500, 390);
+    ctx.strokeText(`3 points for every successful double jump!`, 500, 440);
+    ctx.fillText(`3 points for every successful double jump!`, 500, 440);
 
-    if (this.blinkCounter <= 120) {
-      ctx.strokeStyle = "black";
-      ctx.fillStyle = "white";
-      ctx.font = "40px 'Teko'";
-      ctx.strokeText(`Press space to start`, 500, 500);
-      ctx.fillText(`Press space to start`, 500, 500);
-    } else if (this.blinkCounter > 120 && this.blinkCounter <= 240) {
+    if (this.startBlinkCounter <= 120) {
       ctx.strokeStyle = "black";
       ctx.fillStyle = "#F5C028";
       ctx.font = "40px 'Teko'";
       ctx.strokeText(`Press space to start`, 500, 500);
       ctx.fillText(`Press space to start`, 500, 500);
+    } else if (this.startBlinkCounter > 120 && this.startBlinkCounter <= 240) {
+      ctx.strokeStyle = "black";
+      ctx.fillStyle = "white";
+      ctx.font = "40px 'Teko'";
+      ctx.strokeText(`Press space to start`, 500, 500);
+      ctx.fillText(`Press space to start`, 500, 500);
     } else {
-      this.blinkCounter = 0;
+      this.startBlinkCounter = 0;
     }
   }
 
   renderGameOver(ctx) {
+    this.endBlinkCounter += 1;
+
     ctx.textAlign = "center";
-    ctx.font = "80px 'Teko'";
+    ctx.font = "100px 'Teko'";
     ctx.strokeStyle = "black";
     ctx.lineWidth = 4;
     ctx.strokeText(`GAME OVER`, 500, 200);
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "#F5C028";
     ctx.fillText(`GAME OVER`, 500, 200);
 
-    ctx.font = "40px 'Teko'";
+    ctx.font = "50px 'Teko'";
     ctx.strokeStyle = "white";
     ctx.lineWidth = 4;
     ctx.fillStyle = "black";
     ctx.strokeText(`Your best score : ${this.highestScore}`, 500, 300);
     ctx.strokeText(`Recent score : ${this.score}`, 500, 350);
-
-    ctx.fillStyle = "black";
     ctx.fillText(`Your best score : ${this.highestScore}`, 500, 300);
     ctx.fillText(`Recent score : ${this.score}`, 500, 350);
 
-    ctx.strokeStyle = "black";
-    ctx.lineWidth = 4;
-    ctx.strokeText(`PRESS SPACE TO CONTINUE PLAYING`, 500, 450);
-    ctx.fillStyle = "white";
-    ctx.fillText(`PRESS SPACE TO CONTINUE PLAYING`, 500, 450);
+    if (this.endBlinkCounter <= 90) {
+      ctx.strokeStyle = "black";
+      ctx.lineWidth = 4;
+      ctx.strokeText(`PRESS SPACE TO CONTINUE PLAYING`, 500, 450);
+      ctx.fillStyle = "#F5C028";
+      ctx.fillText(`PRESS SPACE TO CONTINUE PLAYING`, 500, 450);
+    } else if (this.endBlinkCounter > 90 && this.endBlinkCounter <= 180) {
+      ctx.strokeStyle = "black";
+      ctx.lineWidth = 4;
+      ctx.strokeText(`PRESS SPACE TO CONTINUE PLAYING`, 500, 450);
+      ctx.fillStyle = "#white";
+      ctx.fillText(`PRESS SPACE TO CONTINUE PLAYING`, 500, 450);
+    } else {
+      this.endBlinkCounter = 0;
+    }
   }
 
   drawBackground(ctx) {
