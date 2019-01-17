@@ -228,7 +228,9 @@ class Game {
   detectKeyPress() {
     window.addEventListener("keydown", event => {
       const RIGHTEMPTY = "RIGHTEMPTY";
-      event.preventDefault();
+      if (event.keyCode === 32) {
+        event.preventDefault();
+      }
       if (event.keyCode === 32 && !this.monkeyInFlight) {
         if (!this.sessionStarted) {
           this.sessionStarted = true;
