@@ -10,35 +10,31 @@ body {
 }
 
 .stats-container {
-  max-width: 1290px;
+  width: 1000px;
   min-height: 100px;
   border: 5px solid black;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
   font-family: "Teko";
-  font-size: 22px;
+  font-size: 20px;
   background-color: #f5c028;
 }
 
 .tidbits {
-  font-size: 32px;
+  font-size: 28px;
 }
 
-#stats-left-container {
-  min-width: 340px;
-}
-
-#stats-mid-container {
-  min-width: 300px;
+.top-container {
+  padding-top: 20px;
+  padding-bottom: 10px;
+  justify-content: space-between;
+  max-width: 1210px;
+  margin: 0 auto;
 }
 
 .canvas-div {
-  display: flex;
-  padding-top: 40px;
-  padding-bottom: 20px;
-  justify-content: center;
+  align-items: baseline;
+  width: 1000px;
 }
 
 #canvas {
@@ -47,15 +43,13 @@ body {
 
 #audio {
   position: relative;
-  top: 570px;
-  right: 40px;
+  bottom: 12px;
+  right: 47px;
   height: 30px;
 }
 
 .leaderboard-container {
-  display: flex;
-  flex-direction: column;
-  width: 250px;
+  width: 180px;
   max-height: 600px;
   overflow: hidden;
   border: 5px solid black;
@@ -66,28 +60,88 @@ body {
 .leaderboard-title {
   text-align: center;
   font-family: "Teko";
-  font-size: 40px;
+  font-size: 30px;
   padding-top: 5px;
   padding-bottom: 10px;
   text-decoration: underline;
-}
-
-.leaderboard-li {
-  display: flex;
-  padding-bottom: 3px;
 }
 
 .rank-div,
 .username-div,
 .score-div {
   font-family: "Teko";
-  font-size: 24px;
+  font-size: 19px;
 }
 
-.rank-div {
-  min-width: 70px;
+#leaderboard {
+  width: 80%;
 }
 
-.username-div {
-  min-width: 110px;
+.leaderboard-li {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 3px;
+}
+
+.flex {
+  display: flex;
+}
+
+.col {
+  flex-direction: column;
+}
+
+.bottom-container {
+  max-width: 1210px;
+  margin: 0 auto;
+  justify-content: space-between;
+}
+
+@media only screen and (max-width: 1240px) {
+  .top-container {
+    flex-direction: column;
+    max-width: 1010px;
+  }
+
+  .leaderboard-container {
+    margin-top: 10px;
+    width: 1000px;
+    max-height: 180px;
+    overflow: hidden;
+    border: 5px solid black;
+    background-color: #f5c028;
+    align-items: center;
+  }
+
+  #leaderboard {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-content: space-evenly;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    height: 100%;
+  }
+
+  .leaderboard-li {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px;
+    min-width: 110px;
+    margin: 0 10px;
+  }
+
+  .bottom-container {
+    flex-direction: column;
+    max-width: 1010px;
+  }
+
+  footer {
+    padding-top: 20px;
+    width: 1010px;
+  }
+
+  body {
+    margin: 5px;
+  }
 }
