@@ -81,7 +81,7 @@ class Game {
       const scores = res.data;
 
       //Populates leaderboard with top 50 scores
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 25; i++) {
         const rankDiv = document.createElement("DIV");
         const rankText = document.createTextNode(`${i + 1}.`);
         rankDiv.setAttribute("class", "rank-div");
@@ -122,19 +122,19 @@ class Game {
 
       const medianScoreDiv = document.createElement("DIV");
       medianScoreDiv.setAttribute("id", "median-score");
-      const medianScoreText = document.createTextNode(`Most common score: ${medianScore}`);
+      const medianScoreText = document.createTextNode(`- Most common score: ${medianScore}`);
       medianScoreDiv.appendChild(medianScoreText);
       this.statsMidContainer.appendChild(medianScoreDiv);
 
       const averageScoreDiv = document.createElement("DIV");
       averageScoreDiv.setAttribute("id", "average-score");
-      const averageScoreText = document.createTextNode(`Average score: ${averageScore}`);
+      const averageScoreText = document.createTextNode(`- Average score: ${averageScore}`);
       averageScoreDiv.appendChild(averageScoreText);
       this.statsMidContainer.appendChild(averageScoreDiv);
 
       const gamesPlayedDiv = document.createElement("DIV");
       gamesPlayedDiv.setAttribute("id", "games-played");
-      const gamesPlayedText = document.createTextNode(`Total games played: ${gamesPlayed}`);
+      const gamesPlayedText = document.createTextNode(`- Total games played: ${gamesPlayed}`);
       gamesPlayedDiv.appendChild(gamesPlayedText);
       this.statsMidContainer.appendChild(gamesPlayedDiv);
 
@@ -144,7 +144,7 @@ class Game {
       const tidBitOneDiv = document.createElement("DIV");
       tidBitOneDiv.setAttribute("id", "tidbit-1");
       const tidBitOneText = document.createTextNode(
-        `${zeroOrOnePercent}% of all games end between 0 and 1 points`
+        `- ${zeroOrOnePercent}% of all games end between 0 and 1 points`
       );
       tidBitOneDiv.appendChild(tidBitOneText);
       this.statsRightContainer.appendChild(tidBitOneDiv);
@@ -155,7 +155,7 @@ class Game {
 
       const tidBitTwoDiv = document.createElement("DIV");
       tidBitTwoDiv.setAttribute("id", "tidbit-2");
-      const tidBitTwoText = document.createTextNode(`95% of all games score ${score95} or lower`);
+      const tidBitTwoText = document.createTextNode(`- 95% of all games score ${score95} or lower`);
       tidBitTwoDiv.appendChild(tidBitTwoText);
       this.statsRightContainer.appendChild(tidBitTwoDiv);
 
@@ -166,7 +166,7 @@ class Game {
       const tidBitThreeDiv = document.createElement("DIV");
       tidBitThreeDiv.setAttribute("id", "tidbit-3");
       const tidBitThreeText = document.createTextNode(
-        `If you happen to score ${score99} points or higher, you're in the 99th percentile!`
+        `- You're in the 99th percentil if you score ${score99} points or higher!`
       );
       tidBitThreeDiv.appendChild(tidBitThreeText);
       this.statsRightContainer.appendChild(tidBitThreeDiv);
