@@ -17,36 +17,43 @@
   </head>
 
   <body>
-    <div class="canvas-div">
-      <canvas id="canvas" width="1000px" height="600px"></canvas>
-      <img src="../assets/images/speaker.png" id="audio" class="on"></img>
-      <div class="leaderboard-container">
+    <div class="flex top-container">
+      <div class="flex canvas-div">
+        <canvas id="canvas" width="1000px" height="600px"></canvas>
+        <img src="../assets/images/speaker.png" id="audio" class="on"></img>
+      </div>
+      <div class="flex col leaderboard-container">
         <h1 class="leaderboard-title">Leaderboard</h1>
         <ul id="leaderboard"></ul>
       </div>
     </div>
-    <div class="stats-container">
-      <div id="stats-left-container">
-        <h1 class="tidbits">Monkeyball Facts!</h1>
+    <div class="flex bottom-container">
+      <div class="flex stats-container">
+        <div id="stats-left-container">
+          <h1 class="tidbits">Monkeyball Facts!</h1>
+        </div>
+        <div id="stats-mid-container">
+        </div>
+        <div id="stats-right-container">
+        </div>
       </div>
-      <div id="stats-mid-container">
-      </div>
-      <div id="stats-right-container">
-      </div>
+      <footer>
+        <div class="flex col footer-container">
+          <h1 class="footer-name">Peter Zeng</h1>
+          <div class="flex center">
+            <a class="github" target="_blank" href="https://github.com/pzengpzeng/Monkeyball">
+              <img class="github-icon" src="assets/images/github.png" />
+            </a>
+            <a class="linkedin" target="_blank" href="https://www.linkedin.com/in/pzengpzeng/">
+              <img class="linkedin-icon" src="assets/images/linkedin.png" />
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
-   
+    
     <script type="application/javascript" src="./main.js"></script>
   </body>
 
-  <footer>
-    <div class=footer-container>
-      <h1 class="footer-name">Peter Zeng</h1>
-      <a class="github" target="_blank" href="https://github.com/pzengpzeng/Monkeyball">
-        <img class="github-icon" src="assets/images/github.png" />
-      </a>
-      <a class="linkedin" target="_blank" href="https://www.linkedin.com/in/pzengpzeng/">
-        <img class="linkedin-icon" src="assets/images/linkedin.png" />
-      </a>
-    </div>
-  </footer>
+
 </html>
