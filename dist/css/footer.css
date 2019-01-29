@@ -1,4 +1,6 @@
 .footer-container {
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
   margin: 0 auto;
   height: 100%;
@@ -20,11 +22,15 @@
 .linkedin-icon {
   width: 32px;
   height: 32px;
+  -webkit-transition: all 0.1s ease-in-out;
+  -o-transition: all 0.1s ease-in-out;
   transition: all 0.1s ease-in-out;
 }
 
 .github-icon:hover,
 .linkedin-icon:hover {
+  -webkit-transform: scale(1.2);
+  -ms-transform: scale(1.2);
   transform: scale(1.2);
 }
 
@@ -33,5 +39,7 @@
 }
 
 .center {
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
 }
