@@ -188,10 +188,8 @@ class Game {
   }
 
   animate() {
-    if (!this.monkeyInFlight) {
-      if (this.cannons.length < 3) {
-        this.addCannon();
-      }
+    if (this.cannons.length < 3) {
+      this.addCannon();
     }
 
     if (this.monkeyInFlight && !this.successfulLanding) {
