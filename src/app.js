@@ -1,4 +1,5 @@
 import Game from "./game";
+import { fetchScores } from "./scores";
 
 document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("canvas");
@@ -6,4 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let game = new Game(ctx);
   game.animate();
+  game.detectKeyPress();
+  fetchScores();
 });
