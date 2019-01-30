@@ -7,7 +7,13 @@ cannonEmptyRightImg.src = "../assets/images/cannon-empty-right.png";
 const cannonEmptyLeftImg = new Image();
 cannonEmptyLeftImg.src = "../assets/images/cannon-empty-left.png";
 
-export function renderStartScreen(ctx, blinkCount) {
+let startBlinkCounter = 0;
+let endBlinkCounter = 0;
+
+export function renderStartScreen(ctx) {
+  if (startBlinkCounter >= 240) startBlinkCounter = 0;
+  startBlinkCounter += 1;
+
   ctx.drawImage(backgroundImg, 0, 0, 1000, 600);
 
   ctx.textAlign = "center";
@@ -31,13 +37,13 @@ export function renderStartScreen(ctx, blinkCount) {
   ctx.strokeText(`3 points for every successful double jump!`, 500, 440);
   ctx.fillText(`3 points for every successful double jump!`, 500, 440);
 
-  if (blinkCount <= 120) {
+  if (startBlinkCounter <= 120) {
     ctx.strokeStyle = "black";
     ctx.fillStyle = "#F5C028";
     ctx.font = "40px 'Teko'";
     ctx.strokeText(`Press space to start`, 500, 500);
     ctx.fillText(`Press space to start`, 500, 500);
-  } else if (blinkCount > 120 && blinkCount <= 240) {
+  } else if (startBlinkCounter > 120 && startBlinkCounter <= 240) {
     ctx.strokeStyle = "black";
     ctx.fillStyle = "white";
     ctx.font = "40px 'Teko'";
@@ -46,7 +52,10 @@ export function renderStartScreen(ctx, blinkCount) {
   }
 }
 
-export function renderGameOver(ctx, blinkCount, highScore, score) {
+export function renderGameOver(ctx, highScore, score) {
+  if (endBlinkCounter >= 240) endBlinkCounter = 0;
+  endBlinkCounter += 1;
+
   ctx.textAlign = "center";
   ctx.font = "100px 'Teko'";
   ctx.strokeStyle = "black";
@@ -64,20 +73,18 @@ export function renderGameOver(ctx, blinkCount, highScore, score) {
   ctx.fillText(`Your best score : ${highScore}`, 500, 300);
   ctx.fillText(`Recent score : ${score}`, 500, 350);
 
-  if (blinkCount <= 90) {
+  if (endBlinkCounter <= 120) {
     ctx.strokeStyle = "black";
     ctx.lineWidth = 4;
     ctx.strokeText(`PRESS SPACE TO CONTINUE PLAYING`, 500, 450);
     ctx.fillStyle = "#F5C028";
     ctx.fillText(`PRESS SPACE TO CONTINUE PLAYING`, 500, 450);
-  } else if (blinkCount > 90 && blinkCount <= 180) {
+  } else if (endBlinkCounter > 120 && endBlinkCounter <= 240) {
     ctx.strokeStyle = "black";
     ctx.lineWidth = 4;
     ctx.strokeText(`PRESS SPACE TO CONTINUE PLAYING`, 500, 450);
     ctx.fillStyle = "#white";
     ctx.fillText(`PRESS SPACE TO CONTINUE PLAYING`, 500, 450);
-  } else {
-    blinkCount = 0;
   }
 }
 
