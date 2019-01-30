@@ -22,7 +22,6 @@ class Game {
     this.monkeyInFlight = false;
     this.successfulLanding = false;
     this.distanceMoved = 0;
-
     this.gameAudio = new GameAudio();
   }
 
@@ -89,6 +88,7 @@ class Game {
     if (!this.sessionStarted) {
       renderStartScreen(ctx);
     } else if (this.gameOver) {
+      debugger;
       renderGameOver(ctx, this.highestScore, this.score);
     } else {
       drawBackground(ctx, this.score, this.username);
