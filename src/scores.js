@@ -7,8 +7,8 @@ const axios = require("axios");
 export function updateHighScore(recentScore, highestScore) {
   if (recentScore > highestScore) {
     sessionStorage.setItem("highScore", recentScore);
-    return parseInt(sessionStorage.getItem("highScore"));
   }
+  return parseInt(sessionStorage.getItem("highScore"));
 }
 
 export function saveScore(scoreSaved, recentScore, username) {
