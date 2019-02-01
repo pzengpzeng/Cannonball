@@ -3,9 +3,10 @@ class GameAudio {
     this.bgTheme = new Audio("../assets/sounds/bg_theme.mp3");
     this.barrelBlast = new Audio("../assets/sounds/barrel_blast.mp3");
     this.barrelLoad = new Audio("../assets/sounds/barrel_load.mp3");
+    this.adjustVolume(0.2);
+
     this.audioButton = document.getElementById("audio");
     this.addAudioButtonEventListener();
-    this.adjustVolume(0.2);
   }
 
   adjustVolume(volume) {
