@@ -1,7 +1,10 @@
-import Cannon from "./cannon";
-import Monkey from "./monkey";
+import Cannon from "./sprites/cannon";
+import Monkey from "./sprites/monkey";
 import GameAudio from "./audio";
-import { renderStartScreen, renderGameOver, drawBackground, drawCannons, drawMonkey } from "./draw";
+import { drawCannons, drawMonkey } from "./draw/drawSprites";
+import { drawBackground } from "./draw/drawBackground";
+import { renderStartScreen } from "./draw/renderStartScreen";
+import { renderGameOver } from "./draw/renderGameOver";
 import { fetchScores, updateHighScore, saveScore } from "./scores";
 import { detectSuccessfulLanding, detectWallCollision } from "./collisions";
 
@@ -88,7 +91,6 @@ class Game {
     if (!this.sessionStarted) {
       renderStartScreen(ctx);
     } else if (this.gameOver) {
-      debugger;
       renderGameOver(ctx, this.highestScore, this.score);
     } else {
       drawBackground(ctx, this.score, this.username);
