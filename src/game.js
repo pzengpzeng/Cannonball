@@ -11,7 +11,7 @@ const cannonSpeedX = 10;
 class Game {
   constructor(ctx) {
     this.ctx = ctx;
-    this.username = usernameGenerator.generateUsername("", 6);
+    this.username = usernameGenerator.generateUsername("", 4);
     this.score = 0;
     this.highestScore = parseInt(sessionStorage.getItem("highScore")) || 0;
     this.scoreSaved = false;
