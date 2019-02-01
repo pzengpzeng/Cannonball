@@ -2,7 +2,7 @@ import Cannon from "./sprites/cannon";
 import Monkey from "./sprites/monkey";
 import GameAudio from "./audio";
 import { drawCannons, drawMonkey } from "./draw/drawSprites";
-import { drawBackground } from "./draw/drawBackground";
+import { renderBackground } from "./draw/renderBackground";
 import { renderStartScreen } from "./draw/renderStartScreen";
 import { renderGameOver } from "./draw/renderGameOver";
 import { fetchScores, updateHighScore, saveScore } from "./scores";
@@ -93,7 +93,7 @@ class Game {
     } else if (this.gameOver) {
       renderGameOver(ctx, this.highestScore, this.score);
     } else {
-      drawBackground(ctx, this.score, this.username);
+      renderBackground(ctx, this.score, this.username);
       drawCannons(ctx, this.cannons);
       drawMonkey(ctx, this.monkey);
     }

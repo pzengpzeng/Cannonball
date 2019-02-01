@@ -1,6 +1,6 @@
 import { backgroundImg } from "../constants";
 
-export function drawBackground(ctx, score, username) {
+export function renderBackground(ctx, score, username) {
   ctx.drawImage(backgroundImg, 0, 0, 1000, 600);
 
   ctx.textAlign = "right";
