@@ -58,6 +58,28 @@ export const gameOverText = {
   yPos: 200
 };
 
+export function highScoreText(highScore) {
+  return {
+    fontSize: 50,
+    color: black,
+    outlineColor: white,
+    text: `Your best score : ${highScore}`,
+    xPos: 500,
+    yPos: 300
+  };
+}
+
+export function recentScoreText(recentScore) {
+  return {
+    fontSize: 50,
+    color: black,
+    outlineColor: white,
+    text: `Recent score : ${recentScore}`,
+    xPos: 500,
+    yPos: 350
+  };
+}
+
 export const continuePlaying = {
   fontSize: 50,
   color: yellow,
