@@ -27,6 +27,5 @@ export function renderStartScreen(ctx) {
   renderText(ctx, ...Object.values(titleText));
   renderText(ctx, ...Object.values(instructionsOne));
   renderText(ctx, ...Object.values(instructionsTwo));
-
   renderBlinkingText(ctx, instructionsThree, instructionsThreeAlt);
 }
