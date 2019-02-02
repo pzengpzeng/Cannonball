@@ -11,7 +11,7 @@ import {
   instructionsTwo,
   instructionsThree,
   instructionsThreeAlt
-} from "./textObjects";
+} from "./startScreenText";
 
 import { renderText, renderBlinkingText } from "./renderText";
 

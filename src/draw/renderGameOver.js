@@ -4,7 +4,7 @@ import {
   recentScoreText,
   continuePlaying,
   continuePlayingAlt
-} from "./textObjects";
+} from "./gameOverText";
 
 import { renderText, renderBlinkingText } from "./renderText";
 
