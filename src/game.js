@@ -11,6 +11,8 @@ import { detectSuccessfulLanding, detectWallCollision } from "./collisions";
 const usernameGenerator = require("username-generator");
 const cannonSpeedX = 10;
 const RIGHTEMPTY = "RIGHTEMPTY";
+const LEFT = "LEFT";
+const RIGHTFULL = "RIGHTFULL";
 
 class Game {
   constructor(ctx) {
@@ -144,8 +146,6 @@ class Game {
     let xPos;
     let verticalD;
     let horizontalD;
-    const LEFT = "LEFT";
-    const RIGHTFULL = "RIGHTFULL";
 
     if (this.cannons.length <= 0) {
       xPos = 150;
