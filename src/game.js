@@ -143,9 +143,7 @@ class Game {
   }
 
   addCannon() {
-    let xPos;
-    let verticalD;
-    let horizontalD;
+    let xPos, verticalD, horizontalD;
 
     if (this.cannons.length <= 0) {
       xPos = 150;
@@ -161,7 +159,6 @@ class Game {
   }
 
   removeCannon() {
-    const RIGHTFULL = "RIGHTFULL";
     this.cannons.splice(0, 1);
     this.cannons[0].horizontalD = RIGHTFULL;
   }
