@@ -10,6 +10,7 @@ import { detectSuccessfulLanding, detectWallCollision } from "./collisions";
 
 const usernameGenerator = require("username-generator");
 const cannonSpeedX = 10;
+const RIGHTEMPTY = "RIGHTEMPTY";
 
 class Game {
   constructor(ctx) {
@@ -26,16 +27,6 @@ class Game {
     this.successfulLanding = false;
     this.distanceMoved = 0;
     this.gameAudio = new GameAudio();
-  }
-
-  reinitialize() {
-    fetchScores();
-    this.score = 0;
-    this.scoreSaved = false;
-    this.gameOver = false;
-    this.cannons = [];
-    this.monkey = null;
-    this.distanceMoved = 0;
   }
 
   animate() {
@@ -66,25 +57,42 @@ class Game {
 
   detectKeyPress() {
     window.addEventListener("keydown", event => {
-      const RIGHTEMPTY = "RIGHTEMPTY";
       if (event.keyCode === 32) {
         event.preventDefault();
       }
       if (event.keyCode === 32 && !this.monkeyInFlight) {
         if (!this.sessionStarted) {
-          this.sessionStarted = true;
-          this.gameAudio.bgTheme.play();
-          this.gameAudio.bgTheme.loop = true;
+          this.startGame();
         } else if (this.gameOver) {
-          this.reinitialize();
+          this.restartGame();
         } else {
-          this.addMonkey();
-          this.gameAudio.barrelBlast.play();
-          this.monkeyInFlight = true;
-          this.cannons[0].horizontalD = RIGHTEMPTY;
+          this.launchMonkey();
         }
       }
     });
+  }
+
+  startGame() {
+    this.sessionStarted = true;
+    this.gameAudio.bgTheme.play();
+    this.gameAudio.bgTheme.loop = true;
+  }
+
+  restartGame() {
+    fetchScores();
+    this.score = 0;
+    this.scoreSaved = false;
+    this.gameOver = false;
+    this.cannons = [];
+    this.monkey = null;
+    this.distanceMoved = 0;
+  }
+
+  launchMonkey() {
+    this.addMonkey();
+    this.gameAudio.barrelBlast.play();
+    this.monkeyInFlight = true;
+    this.cannons[0].horizontalD = RIGHTEMPTY;
   }
 
   drawCanvas(ctx) {
